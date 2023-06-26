@@ -6,7 +6,9 @@ return Require("Madara")("https://morenovel.net",{
 	imageURL = "https://morenovel.net/wp-content/uploads/2019/04/morenovel-1.png",
 
 	-- defaults values
-	latestNovelSel = "div.col-12.col-md-6.badge-pos-1",
+	-- latestNovelSel = "div.col-12.col-md-6.badge-pos-1",
+	searchHasOper = true,
+	ajaxUsesFormData = true,
 
 	genres = {
 		"Action",

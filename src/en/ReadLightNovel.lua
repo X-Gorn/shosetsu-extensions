@@ -65,7 +65,7 @@ return {
 
 		-- Chapter title inserted before chapter text.
 		htmlElement:child(0):before("<h1>" .. title .. "</h1>");
-		doc = RequestDocument(
+		local doc = RequestDocument(
 			POST('https://api.xgorn.tech/translator', nil,
 				RequestBody(qs({ text=htmlElement }), MediaType("application/x-www-form-urlencoded")))
 			);

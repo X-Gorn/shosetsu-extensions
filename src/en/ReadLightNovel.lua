@@ -65,7 +65,7 @@ return {
 
 		-- Chapter title inserted before chapter text.
 		htmlElement:child(0):before("<h1>" .. title .. "</h1>");
-		local translatedText = RequestDocument(POST("https://api.xgorn.tech/translator", nil, RequestBody(qs({ text=htmlElement:toString() }), MediaType("application/x-www-form-urlencoded")))):select("div#text")
+		local translatedText = RequestDocument(POST("https://api.xgorn.tech/translator", nil, RequestBody(qs({ text=htmlElement:toString() }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div#text")
 		-- doc = RequestDocument(POST('https://api.xgorn.tech/translator', nil, RequestBody(qs({ text=htmlElement }))))
 		return pageOfElem(translatedText)
 	end,

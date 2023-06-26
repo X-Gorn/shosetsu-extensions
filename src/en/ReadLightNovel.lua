@@ -64,7 +64,7 @@ return {
 		htmlElement:select("br"):remove() -- Between each <p> is a <br>.
 
 		-- Chapter title inserted before chapter text.
-		local translatedText = RequestDocument(POST("https://api.xgorn.tech/translator", nil, RequestBody(qs({ text=htmlElement:toString() }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div#text")
+		local translatedText = RequestDocument(POST("https://api.xgorn.tech/translator", nil, RequestBody(qs({ text=htmlElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div#text")
 		-- doc = RequestDocument(POST('https://api.xgorn.tech/translator', nil, RequestBody(qs({ text=htmlElement }))))
 		translatedText:child(0):before("<h1>" .. title .. "</h1>");
 		return pageOfElem(translatedText)

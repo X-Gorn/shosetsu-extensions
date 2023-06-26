@@ -65,8 +65,8 @@ return {
 
 		-- Chapter title inserted before chapter text.
 		htmlElement:child(0):before("<h1>" .. title .. "</h1>");
-
-		return pageOfElem(htmlElement)
+		doc = RequestDocument(POST('https://api.xgorn.tech/translator', nil, RequestBody(qs({ text=htmlElement }))))
+		return pageOfElem(doc)
 	end,
 
 	parseNovel = function(novelURL, loadChapters)

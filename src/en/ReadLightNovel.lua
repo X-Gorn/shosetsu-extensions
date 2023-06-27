@@ -66,12 +66,7 @@ return {
 		local elementString = tostring(htmlElement)
 		local translatedText = RequestDocument(POST("https://api.xgorn.tech/translator", nil, RequestBody(qs({ text=elementString }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
 		
-                local text = ""
-
-                for _, element in ipairs(translatedText) do
-                    text = text .. element:getcontent()
-                end
-		return text
+                return pageOfElem(translatedText)
 	end,
 
 	parseNovel = function(novelURL, loadChapters)

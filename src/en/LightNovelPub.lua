@@ -24,7 +24,7 @@ local name = "Light Novel Pub"
 --- Required.
 ---
 --- @type string
-local baseURL = "https://www.lightnovelpub.com/"
+local baseURL = "https://www.lightnovelworld.com/"
 
 --- URL of the logo.
 ---

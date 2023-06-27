@@ -71,7 +71,7 @@ return {
                 for _, element in ipairs(translatedText) do
                     text = text .. element:getcontent()
                 end
-		return translatedText
+		return text
 	end,
 
 	parseNovel = function(novelURL, loadChapters)

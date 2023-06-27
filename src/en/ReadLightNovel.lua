@@ -63,12 +63,15 @@ return {
 		-- Remove/modify unwanted HTML elements to get a clean webpage.
 		htmlElement:select("br"):remove() -- Between each <p> is a <br>.
 
-		-- Chapter title inserted before chapter text.
 		local elementString = tostring(htmlElement)
-		local translatedText = RequestDocument(POST("https://api.xgorn.tech/translator", nil, RequestBody(qs({ text=elementString }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div#text")
-		-- doc = RequestDocument(POST('https://api.xgorn.tech/translator', nil, RequestBody(qs({ text=htmlElement }))))
-		translatedText:child(0):before("<h1>" .. title .. "</h1>");
-		return pageOfElem(translatedText)
+		local translatedText = RequestDocument(POST("https://api.xgorn.tech/translator", nil, RequestBody(qs({ text=elementString }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
+		
+                local text = ""
+
+                for _, element in ipairs(translatedText) do
+                    text = text .. element:getcontent()
+                end
+		return translatedText
 	end,
 
 	parseNovel = function(novelURL, loadChapters)

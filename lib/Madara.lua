@@ -123,14 +123,18 @@ function defaults:getPassage(url)
 	local htmlElement = GETDocument(self.expandURL(url)):selectFirst("div.c-blog-post")
 	local title = htmlElement:selectFirst("ol.breadcrumb li.active"):text()
 	htmlElement = htmlElement:selectFirst("div.text-left")
-	-- Chapter title inserted before chapter text
-	htmlElement:child(0):before("<h1>" .. title .. "</h1>");
 
 	-- Remove/modify unwanted HTML elements to get a clean webpage.
 	htmlElement:select("div.lnbad-tag"):remove() -- LightNovelBastion text size
 	htmlElement:select("i.icon.j_open_para_comment.j_para_comment_count"):remove() -- BoxNovel, VipNovel numbers
-
-	return pageOfElem(htmlElement, true)
+	
+	-- Translate text
+	local translatedText = RequestDocument(POST("https://api.xgorn.tech/translator", nil, RequestBody(qs({ text=tostring(htmlElement) }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
+	
+	-- Insert title
+	translatedText:child(0):before("<h1>" .. title .. "</h1>");
+	
+	return pageOfElem(translatedText)
 end
 
 ---@param image_element Element An img element of which the biggest image shall be selected.

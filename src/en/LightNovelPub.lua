@@ -1,5 +1,6 @@
 -- {"id":31,"ver":"1.0.0","libVer":"1.0.0","author":"Gta-Cool"}
 
+local qs = Require("url").querystring
 local json = Require("dkjson")
 
 --- Identification number of the extension.
@@ -298,10 +299,16 @@ local function getPassage(chapterURL)
     -- Remove unwanted HTML elements (ads)
     chapter:select(".adsbygoogle"):parents():remove()
 
-    -- Chapter title inserted before chapter text
-    chapter:child(0):before("<h1>" .. title .. "</h1>");
+    -- Convert element to string
+	local stringElement = tostring(chapter)
+	
+	-- Translate text
+	local translatedText = RequestDocument(POST("https://api.xgorn.tech/translator", nil, RequestBody(qs({ text=stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
+	
+	-- Insert title
+	translatedText:child(0):before("<h1>" .. title .. "</h1>");
 
-    return pageOfElem(chapter, true)
+    return pageOfElem(translatedText, true)
 end
 
 --- Load info on a novel.

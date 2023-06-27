@@ -9,6 +9,7 @@ return function(id, name, base, contentSel, image)
 	local novels = {}
 	local api = base .. "/api"
 	local POST = Require("dkjson").POST
+	local qs = Require("url").querystring
 	local data
 
 	local function getNovels()
@@ -64,7 +65,14 @@ return function(id, name, base, contentSel, image)
 			map(content:select("[border]"), function(elem)
 				elem:removeAttr("border")
 			end)
-			return pageOfElem(content, true, css)
+			
+			-- Convert element to string
+			local stringElement = tostring(content)
+			
+			-- Translate text
+			local translatedText = RequestDocument(POST("https://api.xgorn.tech/translator", nil, RequestBody(qs({ text=stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
+			
+			return pageOfElem(translatedText, true, css)
 		end,
 
 		parseNovel = function(slug, loadChapters)

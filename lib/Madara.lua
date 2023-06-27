@@ -1,6 +1,7 @@
 -- {"ver":"2.9.0","author":"TechnoJo4","dep":["url"]}
 
 local encode = Require("url").encode
+local qs = Require("url").querystring
 local text = function(v)
 	return v:text()
 end

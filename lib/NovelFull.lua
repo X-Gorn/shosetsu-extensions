@@ -48,10 +48,16 @@ function defaults:getPassage(url)
 	htmlElement:select("div.ads"):remove()
 	htmlElement:select("div[align=\"left\"]:last-child"):remove() -- Report error text
 
+	-- Convert element to string
+	local stringElement = tostring(htmlElement)
+	
+	-- Translate text
+	local translatedText = RequestDocument(POST("https://api.xgorn.tech/translator", nil, RequestBody(qs({ text=stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
+	
 	-- Chapter title inserted before chapter text.
-	htmlElement:child(0):before("<h1>" .. title .. "</h1>");
+	translatedText:child(0):before("<h1>" .. title .. "</h1>");
 
-	return pageOfElem(htmlElement)
+	return pageOfElem(translatedText)
 end
 
 function defaults:parseNovel(url, loadChapters)

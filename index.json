@@ -571,6 +571,16 @@
       "md5": ""
     },
 {
+      "name": "Light Novel Pub",
+      "fileName": "LightNovelPub",
+      "imageURL": "https://gitlab.com/shosetsuorg/extensions/-/raw/dev/icons/LightNovelPub.png",
+      "id": 31,
+      "lang": "en",
+      "ver": "1.0.0",
+      "libVer": "1.0.0",
+      "md5": ""
+    },
+{
       "name": "WuxiaWorld.Site",
       "fileName": "WuxiaWorldsite",
       "imageURL": "https://wuxiaworld.site/wp-content/uploads/2019/02/WuxiaWorld-e1567126455773.png",

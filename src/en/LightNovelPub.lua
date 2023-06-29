@@ -222,8 +222,8 @@ local function expandURL(url, type)
     return baseURL .. "novel/" .. url
 end
 
-local function getSelective()
-    local url = 'https://www.lightnovelpub.com/novel/why-should-i-stop-being-a-villain'
+local function getSelective(url)
+    local url = 'https://www.lightnovelpub.com/novel/' .. url
     local document = GETDocument(url):selectFirst(".novel-header .glass-background")
 
     return map(document:select("img"), function(ni)
@@ -424,34 +424,7 @@ local function search(data)
     --- @type string
     local query = data[QUERY]
 
-    local function getSearchResultDocument(queryContent)
-        local searchDocument = GETDocument(baseURL .. "search"):selectFirst("#search-section")
-        local lnRequestVerifyToken = searchDocument:selectFirst("#novelSearchForm input[name=__LNRequestVerifyToken]"):attr("value")
-
-        local searchResponse = RequestDocument(
-            POST(
-                baseURL .. "lnsearchlive",
-                HeadersBuilder():add("LNRequestVerifyToken", lnRequestVerifyToken):build(),
-                FormBodyBuilder():add("inputContent", queryContent):build()
-            )
-        )
-        searchResponse = json.decode(searchResponse:selectFirst('body'):text())
-
-        return Document(searchResponse["resultview"])
-    end
-
-    local srDocument = getSearchResultDocument(query)
-
-    return map(
-        srDocument:select(".novel-list .novel-item a"),
-        function(nia)
-            local n = Novel()
-            n:setTitle(nia:selectFirst(".item-body .novel-title"):text())
-            n:setLink(shrinkURL(baseURL .. nia:attr("href"):sub(2), KEY_NOVEL_URL))
-            n:setImageURL(nia:selectFirst(".novel-cover img"):attr("data-src"))
-            return n
-        end
-    )
+    return getSelective(query)
 end
 
 --- Called when a user changes a setting and when the extension is being initialized.

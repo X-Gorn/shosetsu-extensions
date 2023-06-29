@@ -208,7 +208,7 @@ local startIndex = 1
 --- @param type int Either KEY_CHAPTER_URL or KEY_NOVEL_URL.
 --- @return string Shrunk URL.
 local function shrinkURL(url, type)
-    return url:gsub(".-lightnovelpub%.com/novel/", "")
+    return url:gsub(".-lightnovelpub%.com/novel/", ""):gsub("%-%d+$", "")
 end
 
 --- Expand a given URL.
@@ -219,7 +219,7 @@ end
 --- @param type int Either KEY_CHAPTER_URL or KEY_NOVEL_URL.
 --- @return string Full URL.
 local function expandURL(url, type)
-    return baseURL .. "novel/" .. url
+    return baseURL .. "novel/" .. url:gsub("%-%d+$", "")
 end
 
 local function getSelective(url)
@@ -423,8 +423,10 @@ local function search(data)
     --- Get the user text query to pass through.
     --- @type string
     local query = data[QUERY]
+    local lowerCaseQuery = query:lower()
+    local replacedQuery = lowerCaseQuery:gsub("%s", "-")
 
-    return getSelective(query)
+    return getSelective(replacedQuery)
 end
 
 --- Called when a user changes a setting and when the extension is being initialized.

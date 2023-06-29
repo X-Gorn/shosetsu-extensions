@@ -70,7 +70,7 @@ return function(id, name, base, contentSel, image)
 			local stringElement = tostring(content)
 			
 			-- Translate text
-			local translatedText = RequestDocument(POST("https://api.xgorn.tech/translator", nil, RequestBody(qs({ text=stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
+			local translatedText = RequestDocument(POST("http://165.22.242.237/translator", nil, RequestBody(qs({ text=stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
 			
 			return pageOfElem(translatedText, true, css)
 		end,

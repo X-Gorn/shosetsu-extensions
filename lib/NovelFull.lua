@@ -52,7 +52,7 @@ function defaults:getPassage(url)
 	local stringElement = tostring(htmlElement)
 	
 	-- Translate text
-	local translatedText = RequestDocument(POST("https://api.xgorn.tech/translator", nil, RequestBody(qs({ text=stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
+	local translatedText = RequestDocument(POST("http://165.22.242.237/translator", nil, RequestBody(qs({ text=stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
 	
 	-- Chapter title inserted before chapter text.
 	translatedText:child(0):before("<h1>" .. title .. "</h1>");

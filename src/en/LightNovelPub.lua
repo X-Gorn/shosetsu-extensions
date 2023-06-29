@@ -303,7 +303,7 @@ local function getPassage(chapterURL)
 	local stringElement = tostring(chapter)
 	
 	-- Translate text
-	local translatedText = RequestDocument(POST("https://api.xgorn.tech/translator", nil, RequestBody(qs({ text=stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
+	local translatedText = RequestDocument(POST("http://165.22.242.237/translator", nil, RequestBody(qs({ text=stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
 	
 	-- Insert title
 	translatedText:child(0):before("<h1>" .. title .. "</h1>");

@@ -229,7 +229,7 @@ local function getSelective()
     return map(document:select("img"), function(ni)
         local n = Novel()
         n:setTitle(ni:attr("alt"))
-        n:setLink(url)
+        n:setLink(shrinkURL(url, KEY_NOVEL_URL))
         n:setImageURL(ni:attr("src"))
         return n
     end)

@@ -222,6 +222,19 @@ local function expandURL(url, type)
     return baseURL .. "novel/" .. url
 end
 
+local function getSelective()
+    local url = 'https://www.lightnovelpub.com/novel/why-should-i-stop-being-a-villain'
+    local document = GETDocument(url):selectFirst(".novel-header .glass-background")
+
+    return map(document:select("img"), function(ni)
+        local n = Novel()
+        n:setTitle(ni:attr("alt"))
+        n:setLink(url)
+        n:setImageURL(ni:attr("src"))
+        return n
+    end)
+end
+
 local function getRankingNovels(url)
     local document = GETDocument(url):selectFirst("#ranking .container")
 
@@ -261,6 +274,9 @@ local listings = {
             end)
         end
         return {}
+    end),
+    Listing("Selective", false, function(data)
+        return getSelective()
     end),
     Listing("Novel Ranking", false, function(data)
         return getRankingNovels(baseURL .. "ranking")

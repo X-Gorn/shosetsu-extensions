@@ -276,7 +276,7 @@ local listings = {
         return {}
     end),
     Listing("Selective", false, function(data)
-        return getSelective()
+        return getSelective('dimensional-descent')
     end),
     Listing("Novel Ranking", false, function(data)
         return getRankingNovels(baseURL .. "ranking")

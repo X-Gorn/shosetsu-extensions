@@ -219,7 +219,7 @@ end
 --- @param type int Either KEY_CHAPTER_URL or KEY_NOVEL_URL.
 --- @return string Full URL.
 local function expandURL(url, type)
-    return baseURL .. "novel/" .. url:gsub("%-%d+$", "")
+    return baseURL .. "novel/" .. url
 end
 
 local function getSelective(url)

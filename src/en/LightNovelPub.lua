@@ -208,7 +208,7 @@ local startIndex = 1
 --- @param type int Either KEY_CHAPTER_URL or KEY_NOVEL_URL.
 --- @return string Shrunk URL.
 local function shrinkURL(url, type)
-    return url:gsub(".-lightnovelpub%.com/novel/", ""):gsub("%-%d+$", "")
+    return url:gsub(".-lightnovelpub%.com/novel/", "")
 end
 
 --- Expand a given URL.
@@ -229,7 +229,7 @@ local function getSelective(url)
     return map(document:select("img"), function(ni)
         local n = Novel()
         n:setTitle(ni:attr("alt"))
-        n:setLink(shrinkURL(url, KEY_NOVEL_URL))
+        n:setLink(shrinkURL(url, KEY_NOVEL_URL):gsub("%-%d+$", ""))
         n:setImageURL(ni:attr("src"))
         return n
     end)
@@ -242,7 +242,7 @@ local function getRankingNovels(url)
         local n = Novel()
         local te = ni:selectFirst(".item-body .title.text2row a");
         n:setTitle(te:attr("title"))
-        n:setLink(shrinkURL(baseURL .. te:attr("href"):sub(2), KEY_NOVEL_URL))
+        n:setLink(shrinkURL(baseURL .. te:attr("href"):sub(2), KEY_NOVEL_URL):gsub("%-%d+$", ""))
         n:setImageURL(ni:selectFirst(".cover img"):attr("data-src"))
         return n
     end)
@@ -268,7 +268,7 @@ local listings = {
                 local n = Novel()
                 local te = ni:selectFirst(".item-body .novel-title a");
                 n:setTitle(te:attr("title"))
-                n:setLink(shrinkURL(baseURL .. te:attr("href"):sub(2), KEY_NOVEL_URL))
+                n:setLink(shrinkURL(baseURL .. te:attr("href"):sub(2), KEY_NOVEL_URL):gsub("%-%d+$", ""))
                 n:setImageURL(ni:selectFirst(".novel-cover img"):attr("data-src"))
                 return n
             end)

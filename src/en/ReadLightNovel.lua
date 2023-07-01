@@ -24,6 +24,36 @@ local function parseTop(doc)
 	end)
 end
 
+
+--- Internal settings store.
+---
+--- Completely optional.
+---  But required if you want to save results from [updateSetting].
+---
+--- Notice, each key is surrounded by "[]" and the value is on the right side.
+local settings = {
+	[1] = "api-key",
+}
+
+--- Settings model for Shosetsu to render.
+---
+--- Optional, Default is empty.
+---
+local settingsModel = {
+	TextFilter(1, "API Key"),
+}
+
+
+--- Called when a user changes a setting and when the extension is being initialized.
+---
+--- Optional, But required if [settingsModel] is not empty.
+---
+local function updateSetting(id, value)
+	settings[id] = value
+end
+
+
+
 -- utils to make the code more linearly
 -- TODO: move these to kotlin-lib luaFuncs
 local function identity(...)
@@ -64,7 +94,8 @@ return {
 		htmlElement:select("br"):remove() -- Between each <p> is a <br>.
 
 		local elementString = tostring(htmlElement)
-		local translatedText = RequestDocument(POST("http://165.22.242.237/translator", nil, RequestBody(qs({ text=elementString }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
+		local apiKey = settings[1]
+		local translatedText = RequestDocument(POST("http://165.22.242.237/translator", nil, RequestBody(qs({ text=elementString, api_key=apiKey }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
 		translatedText:child(0):before("<h1>" .. title .. "</h1>");
                 return pageOfElem(translatedText)
 	end,
@@ -125,11 +156,12 @@ return {
 
 		return info
 	end,
-
 	search = function(data)
 		return parseTop(RequestDocument(
 			POST(expandURL("/detailed-search-210922"), nil,
 				RequestBody(qs({ keyword=data[QUERY], search=1 }), MediaType("application/x-www-form-urlencoded")))
 			))
 	end,
+	settings = settingsModel,
+	updateSetting = updateSetting,
 }

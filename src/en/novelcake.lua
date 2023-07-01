@@ -4,7 +4,6 @@ return Require("Madara")("https://novelcake.com", {
   id = 75,
   name = "Novelcake",
   imageURL = "https://novelcake.com/wp-content/uploads/2017/10/NOVELCAKE_2.png",
-  latestNovelSel = "div.col-6.col-md-3.badge-pos-1",
   chaptersScriptLoaded = true,
   hasSearch = true,
 

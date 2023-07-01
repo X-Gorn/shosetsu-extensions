@@ -165,8 +165,5 @@ return {
 				RequestBody(qs({ keyword=data[QUERY], search=1 }), MediaType("application/x-www-form-urlencoded")))
 			))
 	end,
-	setSettings = function(s)
-		settings = s
-	end,
 	updateSetting = updateSetting,
 }

@@ -32,8 +32,7 @@ end
 ---
 --- Notice, each key is surrounded by "[]" and the value is on the right side.
 local settings = {
-		[1] = "test",
-		[2] = false,
+	[1] = "test",
 }
 
 --- Settings model for Shosetsu to render.
@@ -41,8 +40,7 @@ local settings = {
 --- Optional, Default is empty.
 ---
 local settingsModel = {
-		TextFilter(1, "API Key"),
-		SwitchFilter(2, "RANDOM SWITCH INPUT"),
+	TextFilter(1, "API Key"),
 }
 
 

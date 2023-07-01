@@ -25,17 +25,6 @@ local function parseTop(doc)
 end
 
 
-local searchFilters = {
-	TextFilter(5, "RANDOM STRING INPUT"),
-	SwitchFilter(6, "RANDOM SWITCH INPUT"),
-	CheckboxFilter(7, "RANDOM CHECKBOX INPUT"),
-	TriStateFilter(8, "RANDOM TRISTATE CHECKBOX INPUT"),
-	RadioGroupFilter(9, "RANDOM RGROUP INPUT", { "A", "B", "C" }),
-	DropdownFilter(10, "RANDOM DDOWN INPUT", { "A", "B", "C" })
-}
-
-
-
 --- Internal settings store.
 ---
 --- Completely optional.

@@ -10,7 +10,7 @@ local RANDOM_SWITCH_INPUT = 202
 ---
 --- Notice, each key is surrounded by "[]" and the value is on the right side.
 local settings = {
-	[API_KEY] = "test"
+	[API_KEY] = "test",
     [RANDOM_SWITCH_INPUT] = false,
 }
 

@@ -82,7 +82,7 @@ return {
 	expandURL = expandURL,
 
 	listings = {
-		Listing("Top Novels", true, function(data)
+		Listing("Top Novels r" .. settings[1], true, function(data)
 			return parseTop(GETDocument(expandURL("/top-novels/top-rated/" .. data[PAGE])))
 		end)
 	},

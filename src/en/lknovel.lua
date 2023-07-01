@@ -1,5 +1,8 @@
 -- {"id":75,"ver":"1.0.6","libVer":"1.0.0","author":"Doomsdayrs, AbhiTheModder","dep":["Madara>=2.2.0"]}
 
+local API_KEY = 201
+local RANDOM_SWITCH_INPUT = 202
+
 --- Internal settings store.
 ---
 --- Completely optional.
@@ -7,8 +10,8 @@
 ---
 --- Notice, each key is surrounded by "[]" and the value is on the right side.
 local settings = {
-	[1] = "test",
-	[2] = false,
+	[API_KEY] = "test"
+    [RANDOM_SWITCH_INPUT] = false,
 }
 
 --- Settings model for Shosetsu to render.
@@ -16,8 +19,8 @@ local settings = {
 --- Optional, Default is empty.
 ---
 local settingsModel = {
-	TextFilter(1, "API Key"),
-	SwitchFilter(2, "RANDOM SWITCH INPUT"),
+	TextFilter(API_KEY, "API Key"),
+    SwitchFilter(RANDOM_SWITCH_INPUT), "RANDOM SWITCH INPUT",
 }
 
 

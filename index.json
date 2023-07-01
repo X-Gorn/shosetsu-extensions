@@ -571,6 +571,16 @@
       "md5": ""
     },
 {
+      "name": "Lknovel",
+      "fileName": "lknovel",
+      "imageURL": "https://lknovel.com/wp-content/uploads/2017/10/lknovelljljl.png",
+      "id": 325,
+      "lang": "en",
+      "ver": "1.0.0",
+      "libVer": "1.0.0",
+      "md5": ""
+    },
+{
       "name": "Light Novel Pub",
       "fileName": "LightNovelPub",
       "imageURL": "https://gitlab.com/shosetsuorg/extensions/-/raw/dev/icons/LightNovelPub.png",

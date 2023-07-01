@@ -82,7 +82,7 @@ return {
 	expandURL = expandURL,
 
 	listings = {
-		Listing("Top Novels r" .. settings[1], true, function(data)
+		Listing("Top Novels", true, function(data)
 			return parseTop(GETDocument(expandURL("/top-novels/top-rated/" .. data[PAGE])))
 		end)
 	},
@@ -98,7 +98,7 @@ return {
 		local elementString = tostring(htmlElement)
 		local apiKey = settings[1]
 		local translatedText = RequestDocument(POST("http://165.22.242.237/translator", nil, RequestBody(qs({ text=elementString, api_key=apiKey }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
-		translatedText:child(0):before("<h1>" .. title .. "</h1>");
+		translatedText:child(0):before("<h1>" .. settings[1] .. title .. "</h1>");
                 return pageOfElem(translatedText)
 	end,
 

@@ -41,7 +41,7 @@ local settings = {
 --- Optional, Default is empty.
 ---
 local settingsModel = {
-	TextFilter(1, "API Key")
+	TextFilter(1, "API Key"),
 	SwitchFilter(2, "RANDOM SWITCH INPUT"),
 }
 

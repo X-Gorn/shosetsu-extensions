@@ -25,6 +25,17 @@ local function parseTop(doc)
 end
 
 
+local searchFilters = {
+	TextFilter(5, "RANDOM STRING INPUT"),
+	SwitchFilter(6, "RANDOM SWITCH INPUT"),
+	CheckboxFilter(7, "RANDOM CHECKBOX INPUT"),
+	TriStateFilter(8, "RANDOM TRISTATE CHECKBOX INPUT"),
+	RadioGroupFilter(9, "RANDOM RGROUP INPUT", { "A", "B", "C" }),
+	DropdownFilter(10, "RANDOM DDOWN INPUT", { "A", "B", "C" })
+}
+
+
+
 --- Internal settings store.
 ---
 --- Completely optional.
@@ -156,12 +167,15 @@ return {
 
 		return info
 	end,
+	settings = settingsModel,
 	search = function(data)
 		return parseTop(RequestDocument(
 			POST(expandURL("/detailed-search-210922"), nil,
 				RequestBody(qs({ keyword=data[QUERY], search=1 }), MediaType("application/x-www-form-urlencoded")))
 			))
 	end,
-	settings = settingsModel,
+	setSettings = function(s)
+		settings = s
+	end,
 	updateSetting = updateSetting,
 }

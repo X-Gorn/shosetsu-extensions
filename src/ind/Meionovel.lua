@@ -28,7 +28,7 @@ return Require("Madara")("https://meionovel.id",{
         "One shot",
 		"Mystery",
 		"Psychological",
-        "Reverse Harem"
+        "Reverse Harem",
 		"Romance",
 		"School Life",
 		"Sci-fi",

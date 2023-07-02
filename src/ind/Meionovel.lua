@@ -6,6 +6,7 @@ return Require("Madara")("https://meionovel.id",{
 	imageURL = "https://meionovel.id/wp-content/uploads/2017/10/sampul-meio111-1.png",
 	searchHasOper = true,
 	ajaxUsesFormData = true,
+    chaptersScriptLoaded = false,
 	genres = {
 		"Action",
 		"Adventure",

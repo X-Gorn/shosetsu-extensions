@@ -2,7 +2,7 @@
 
 return Require("Madara")("https://meionovel.id",{
 	id = 923826,
-	name = "Meionovel",
+	name = "MeioNovel",
 	imageURL = "https://meionovel.id/wp-content/uploads/2017/10/sampul-meio111-1.png",
 	searchHasOper = true,
 	ajaxUsesFormData = true,

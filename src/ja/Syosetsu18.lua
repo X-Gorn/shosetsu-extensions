@@ -1,6 +1,4 @@
--- {"id":3,"ver":"1.2.2","libVer":"1.0.0","author":"Doomsdayrs","dep":["url>=1.0.0"]}
---- @author Doomsdayrs
---- @version 1.2.0
+-- {"id":3724823,"ver":"1.0.0","libVer":"1.0.0","author":"pxkazuki","dep":["url>=1.0.0"]}
 
 local baseURL = "https://mnlt.syosetu.com"
 local passageURL = "https://novel18.syosetu.com"
@@ -17,8 +15,8 @@ local function expandURL(url)
 end
 
 return {
-	id = 3,
-	name = "Syosetsu",
+	id = 3724823,
+	name = "Syosetsu18",
 	baseURL = baseURL,
 	imageURL = "https://github.com/shosetsuorg/extensions/raw/dev/icons/Syosetsu.png",
 	listings = {

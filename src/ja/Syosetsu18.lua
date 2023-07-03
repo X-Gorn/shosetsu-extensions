@@ -32,7 +32,7 @@ return {
 					local novel = Novel()
 					local e = v:selectFirst("div.novel_h"):selectFirst("a.tl")
 					novel:setImageURL(
-					"https://thumbs.dreamstime.com/z/sign-warning-symbol-isolated-white-background-over-plus-censored-eighteen-age-older-forbidden-adult-content-sign-warning-144828426.jpg")
+						"https://thumbs.dreamstime.com/z/sign-warning-symbol-isolated-white-background-over-plus-censored-eighteen-age-older-forbidden-adult-content-sign-warning-144828426.jpg")
 					novel:setLink(shrinkURL(e:attr("href")))
 					novel:setTitle(e:text())
 					return novel

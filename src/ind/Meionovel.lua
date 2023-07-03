@@ -1,4 +1,4 @@
--- {"id":923826,"ver":"1.0.1","libVer":"1.0.0","author":"pxkazuki","dep":["Madara>=2.2.0"]}
+-- {"id":923826,"ver":"1.0.0","libVer":"1.0.0","author":"pxkazuki","dep":["Madara>=2.2.0"]}
 
 return Require("Madara")("https://meionovel.id",{
 	id = 923826,

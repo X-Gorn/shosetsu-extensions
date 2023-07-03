@@ -27,8 +27,8 @@ return {
 				data[PAGE] = 1
 			end
 			return map(GETDocument(
-					baseURL .. "/search.php?&search_type=novel&order_former=search&order=new&notnizi=1&p=" .. data[PAGE])
-				:select("div.searchkekka_box"), function(v)
+						baseURL .. "/search.php?&search_type=novel&order_former=search&order=new&notnizi=1&p=" .. data[PAGE])
+						:select("div.searchkekka_box"), function(v)
 					local novel = Novel()
 					local e = v:selectFirst("div.novel_h"):selectFirst("a.tl")
 					novel:setImageURL(

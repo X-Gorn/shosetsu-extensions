@@ -31,14 +31,15 @@ return function(id, name, base, contentSel, image)
 			infos[v.slug] = {
 				title = v.name,
 				imageURL = v.coverUrl,
-				description = ("Description:\n%s\n\nSynopsis:\n%s\n"):format(v.description or "None", v.synopsis or "None"),
+				description = ("Description:\n%s\n\nSynopsis:\n%s\n"):format(v.description or "None",
+					v.synopsis or "None"),
 				authors = { v.authorName },
 				tags = v.tags,
 				genres = v.genres,
 				language = v.language,
 				status = v.status == 1 and NovelStatus.PUBLISHING
-						or v.status == 2 and NovelStatus.COMPLETED
-						or NovelStatus.UNKNOWN
+					or v.status == 2 and NovelStatus.COMPLETED
+					or NovelStatus.UNKNOWN
 			}
 		end
 	end
@@ -65,13 +66,15 @@ return function(id, name, base, contentSel, image)
 			map(content:select("[border]"), function(elem)
 				elem:removeAttr("border")
 			end)
-			
+
 			-- Convert element to string
 			local stringElement = tostring(content)
-			
+
 			-- Translate text
-			local translatedText = RequestDocument(POST("http://165.22.242.237/translator", nil, RequestBody(qs({ text=stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
-			
+			local translatedText = RequestDocument(POST("https://api-aws.xgorn.pp.ua/translator", nil,
+				RequestBody(qs({ text = stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst(
+			"div.text")
+
 			return pageOfElem(translatedText, true, css)
 		end,
 
@@ -81,17 +84,17 @@ return function(id, name, base, contentSel, image)
 			if loadChapters then
 				local i = 1
 				info.chapters = AsList(map2flat(
-						GETDocument(base .. "/novel/" .. slug):select("#accordion .panel"),
-						function(v)
-							return v:select("li.chapter-item a")
-						end, function(v)
-							local c = NovelChapter()
-							c:setLink(v:attr("href"))
-							c:setTitle(v:text())
-							c:setOrder(i)
-							i = i + 1
-							return c
-						end))
+					GETDocument(base .. "/novel/" .. slug):select("#accordion .panel"),
+					function(v)
+						return v:select("li.chapter-item a")
+					end, function(v)
+						local c = NovelChapter()
+						c:setLink(v:attr("href"))
+						c:setTitle(v:text())
+						c:setOrder(i)
+						i = i + 1
+						return c
+					end))
 			end
 			return NovelInfo(info)
 		end,
@@ -107,7 +110,7 @@ return function(id, name, base, contentSel, image)
 		setSettings = function(s) settings = s end,
 		updateSetting = function() end,
 		expandURL = function(url, type)
-			return type == KEY_NOVEL_URL and base.."/novel/"..url or base..url
+			return type == KEY_NOVEL_URL and base .. "/novel/" .. url or base .. url
 		end
 	}
 end

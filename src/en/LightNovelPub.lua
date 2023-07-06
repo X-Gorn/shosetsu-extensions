@@ -316,13 +316,15 @@ local function getPassage(chapterURL)
     chapter:select(".adsbygoogle"):parents():remove()
 
     -- Convert element to string
-	local stringElement = tostring(chapter)
-	
-	-- Translate text
-	local translatedText = RequestDocument(POST("http://165.22.242.237/translator", nil, RequestBody(qs({ text=stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
-	
-	-- Insert title
-	translatedText:child(0):before("<h1>" .. title .. "</h1>");
+    local stringElement = tostring(chapter)
+
+    -- Translate text
+    local translatedText = RequestDocument(POST("https://api-aws.xgorn.pp.ua/translator", nil,
+        RequestBody(qs({ text = stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst(
+    "div.text")
+
+    -- Insert title
+    translatedText:child(0):before("<h1>" .. title .. "</h1>");
 
     return pageOfElem(translatedText, true)
 end
@@ -382,7 +384,8 @@ local function parseNovel(novelURL)
     local nextLinkNode = nil
     local chaptersTable = {}
     repeat
-        local chaptersPageUrl = nextLinkNode ~= nil and (baseURL .. nextLinkNode:attr("href"):sub(2)) or (url .. "/chapters/")
+        local chaptersPageUrl = nextLinkNode ~= nil and (baseURL .. nextLinkNode:attr("href"):sub(2)) or
+        (url .. "/chapters/")
         local chaptersDocument = GETDocument(chaptersPageUrl):selectFirst("#chpagedlist")
         nextLinkNode = chaptersDocument:selectFirst(".pagination .PagedList-skipToNext a")
         local pageChaptersTable = map(chaptersDocument:select(".chapter-list a"), function(ni)
@@ -394,7 +397,7 @@ local function parseNovel(novelURL)
             nc:setRelease(ni:selectFirst(".chapter-update"):text())
             return nc
         end)
-        for _,nc in ipairs(pageChaptersTable) do
+        for _, nc in ipairs(pageChaptersTable) do
             table.insert(chaptersTable, nc)
         end
     until (nextLinkNode == nil)

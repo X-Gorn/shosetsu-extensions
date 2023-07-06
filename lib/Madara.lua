@@ -28,7 +28,7 @@ local defaults = {
 	-- If ajaxUsesFormData is true, then a POST request will be send to baseURL/ajaxFormDataUrl.
 	-- Otherwise to baseURL/shrinkURLNovel/novelurl/ajaxSeriesUrl .
 	ajaxUsesFormData = false,
-	ajaxFormDataSel= "a.wp-manga-action-button",
+	ajaxFormDataSel = "a.wp-manga-action-button",
 	ajaxFormDataAttr = "data-post",
 	ajaxFormDataUrl = "/wp-admin/admin-ajax.php",
 	ajaxSeriesUrl = "ajax/chapters/",
@@ -48,7 +48,8 @@ local STATUS_FILTER_KEY_CANCELED = 8
 local STATUS_FILTER_KEY_ON_HOLD = 9
 
 function defaults:latest(data)
-	return self.parse(GETDocument(self.baseURL .. "/" .. self.novelListingURLPath .. "/page/" .. data[PAGE] .. "/?m_orderby=latest" .. self.novelListingURLSuffix))
+	return self.parse(GETDocument(self.baseURL ..
+	"/" .. self.novelListingURLPath .. "/page/" .. data[PAGE] .. "/?m_orderby=latest" .. self.novelListingURLSuffix))
 end
 
 ---@param tbl table
@@ -62,10 +63,10 @@ function defaults:createSearchString(tbl)
 	local release = tbl[RELEASE_FILTER_KEY]
 
 	local url = self.baseURL .. "/page/" .. page ..
-			"/?s=" .. encode(query) .. "&post_type=wp-manga" ..
-			"&author=" .. encode(author) ..
-			"&artist=" .. encode(artist) ..
-			"&release=" .. encode(release)
+		"/?s=" .. encode(query) .. "&post_type=wp-manga" ..
+		"&author=" .. encode(author) ..
+		"&artist=" .. encode(artist) ..
+		"&release=" .. encode(release)
 
 	if orderBy ~= nil then
 		url = url .. "&m_orderby=" .. ({
@@ -131,18 +132,20 @@ function defaults:getPassage(url)
 	htmlElement:prepend("<h1>" .. title .. "</h1>");
 
 	-- Remove/modify unwanted HTML elements to get a clean webpage.
-	htmlElement:select("div.lnbad-tag"):remove() -- LightNovelBastion text size
+	htmlElement:select("div.lnbad-tag"):remove()                                -- LightNovelBastion text size
 	htmlElement:select("i.icon.j_open_para_comment.j_para_comment_count"):remove() -- BoxNovel, VipNovel numbers
 
 	-- Convert element to string
 	local stringElement = tostring(htmlElement)
-	
+
 	-- Translate text
-	local translatedText = RequestDocument(POST("http://165.22.242.237/translator", nil, RequestBody(qs({ text=stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
-	
+	local translatedText = RequestDocument(POST("https://api-aws.xgorn.pp.ua/translator", nil,
+		RequestBody(qs({ text = stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst(
+	"div.text")
+
 	-- Insert title
 	translatedText:prepend("<h1>" .. title .. "</h1>");
-	
+
 	return pageOfElem(translatedText, true, self.customStyle)
 end
 
@@ -221,27 +224,27 @@ function defaults:parseNovel(url, loadChapters)
 		title = titleElement:text(),
 		imageURL = imgUrl,
 		status = ({
-					OnGoing = NovelStatus.PUBLISHING,
-					Completed = NovelStatus.COMPLETED,
-					Canceled = NovelStatus.PAUSED,
-					["On Hold"] = NovelStatus.PAUSED,
-					Ongoing = NovelStatus.PUBLISHING -- Never spotted, but better safe than sorry.
-				-- If there is a 'Release' content item then it comes before the 'Status'.
-				-- Therefore, select last content item.
-				})[selectedContent:get(selectedContent:size()-1):select("div.summary-content"):text()]
+			OnGoing = NovelStatus.PUBLISHING,
+			Completed = NovelStatus.COMPLETED,
+			Canceled = NovelStatus.PAUSED,
+			["On Hold"] = NovelStatus.PAUSED,
+			Ongoing = NovelStatus.PUBLISHING -- Never spotted, but better safe than sorry.
+			-- If there is a 'Release' content item then it comes before the 'Status'.
+			-- Therefore, select last content item.
+		})[selectedContent:get(selectedContent:size() - 1):select("div.summary-content"):text()]
 	}
 	-- Not every Novel has an guaranteed author, artist or genres (looking at you NovelTrench).
 	selectedContent = content:selectFirst("div.author-content")
 	if selectedContent ~= nil then
-		info:setAuthors( map(selectedContent:select("a"), text) )
+		info:setAuthors(map(selectedContent:select("a"), text))
 	end
 	selectedContent = content:selectFirst("div.artist-content")
 	if selectedContent ~= nil then
-		info:setArtists( map(selectedContent:select("a"), text) )
+		info:setArtists(map(selectedContent:select("a"), text))
 	end
 	selectedContent = content:selectFirst("div.genres-content")
 	if selectedContent ~= nil then
-		info:setGenres( map(selectedContent:select("a"), text) )
+		info:setGenres(map(selectedContent:select("a"), text))
 	end
 
 	-- Chapters
@@ -254,16 +257,16 @@ function defaults:parseNovel(url, loadChapters)
 				local id = button:attr(self.ajaxFormDataAttr)
 
 				doc = RequestDocument(
-						POST(self.baseURL .. self.ajaxFormDataUrl, nil,
-								FormBodyBuilder()
-										:add("action", "manga_get_chapters")
-										:add("manga", id):build())
+					POST(self.baseURL .. self.ajaxFormDataUrl, nil,
+						FormBodyBuilder()
+						:add("action", "manga_get_chapters")
+						:add("manga", id):build())
 				)
 			else
 				-- Used by BoxNovel, Foxaholic, NovelTrench, LightNovelHeaven, VipNovel and WoopRead.
 				doc = RequestDocument(
-						POST(self.baseURL .. "/" .. self.shrinkURLNovel .. "/" .. url .. self.ajaxSeriesUrl,
-								nil, nil)
+					POST(self.baseURL .. "/" .. self.shrinkURLNovel .. "/" .. url .. self.ajaxSeriesUrl,
+						nil, nil)
 				)
 			end
 		end
@@ -279,7 +282,7 @@ function defaults:parseNovel(url, loadChapters)
 			else
 				chapterOrder = chapterOrder + 1
 			end
-			return NovelChapter{
+			return NovelChapter {
 				title = v:selectFirst("a"):text(),
 				link = self.shrinkURL(v:selectFirst("a"):attr("href")),
 				release = v:selectFirst("span.chapter-release-date"):text(),
@@ -324,10 +327,12 @@ function defaults:shrinkURL(url)
 end
 
 return function(baseURL, _self)
-	_self = setmetatable(_self or {}, { __index = function(_, k)
-		local d = defaults[k]
-		return (type(d) == "function" and wrap(_self, d) or d)
-	end })
+	_self = setmetatable(_self or {}, {
+		__index = function(_, k)
+			local d = defaults[k]
+			return (type(d) == "function" and wrap(_self, d) or d)
+		end
+	})
 
 	_self.genres_map = {}
 	local keyID = 100
@@ -353,7 +358,8 @@ return function(baseURL, _self)
 	if _self.searchHasOper then
 		keyID = keyID + 1
 		_self.searchOperId = keyID
-		filters[#filters + 1] = DropdownFilter(keyID, "Genres Condition", { "OR (any of selected)", "AND (all selected)" })
+		filters[#filters + 1] = DropdownFilter(keyID, "Genres Condition",
+			{ "OR (any of selected)", "AND (all selected)" })
 	end
 
 	filters = _self.appendToSearchFilters(filters)

@@ -2,7 +2,7 @@
 
 local baseURL = "https://www.readlightnovel.me"
 local qs = Require("url").querystring
- 
+
 local function shrinkURL(url)
 	return url:gsub(".-readlightnovel%.me", "")
 end
@@ -62,13 +62,13 @@ local function identity(...)
 	return ...
 end
 local function pipeline(obj)
-    return function(f, ...)
-        if not f then
-            return obj
-        else
-            return pipeline(f(obj, ...))
-        end
-    end
+	return function(f, ...)
+		if not f then
+			return obj
+		else
+			return pipeline(f(obj, ...))
+		end
+	end
 end
 
 return {
@@ -97,9 +97,11 @@ return {
 
 		local elementString = tostring(htmlElement)
 		local apiKey = settings[1]
-		local translatedText = RequestDocument(POST("http://165.22.242.237/translator", nil, RequestBody(qs({ text=elementString, api_key=apiKey }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
+		local translatedText = RequestDocument(POST("https://api-aws.xgorn.pp.ua/translator", nil,
+			RequestBody(qs({ text = elementString, api_key = apiKey }), MediaType("application/x-www-form-urlencoded"))))
+		:selectFirst("div.text")
 		translatedText:child(0):before("<h1>" .. title .. "</h1>");
-                return pageOfElem(translatedText)
+		return pageOfElem(translatedText)
 	end,
 
 	parseNovel = function(novelURL, loadChapters)
@@ -117,7 +119,7 @@ return {
 			status = ({
 				Ongoing = NovelStatus.PUBLISHING,
 				Completed = NovelStatus.COMPLETED,
-			})[leftdetails:get(leftdetails:size()-1):selectFirst("li"):text()],
+			})[leftdetails:get(leftdetails:size() - 1):selectFirst("li"):text()],
 			genres = map(leftdetails:get(1):select("a"), text),
 			language = leftdetails:get(3):selectFirst("li"):text(),
 			authors = map(leftdetails:get(4):select("a"), text),
@@ -134,26 +136,26 @@ return {
 			-- mapping with identity function is a workaround,
 			-- TODO: flatten should support java arrays to avoid this
 			info:setChapters(
-					pipeline(doc:select("#accordion .panel-body .tab-content"))
-						(map, function(v)
-							return map(v:select(".tab-pane ul"), identity)
-						end)(flatten)
-						(map, function(v)
-							return map(v:select("li a"), identity)
-						end)(flatten)
-						(map, function(v)
-							i = i + 1
-							return NovelChapter {
-								order = i,
-								title = v:text(),
-								link = shrinkURL(v:attr("href")),
-							}
-						end)
-						(filter, function(chap)
-							local duplicate = dedup[chap:getLink()]
-							dedup[chap:getLink()] = true
-							return not duplicate
-						end)(AsList)())
+				pipeline(doc:select("#accordion .panel-body .tab-content"))
+				(map, function(v)
+					return map(v:select(".tab-pane ul"), identity)
+				end)(flatten)
+				(map, function(v)
+					return map(v:select("li a"), identity)
+				end)(flatten)
+				(map, function(v)
+					i = i + 1
+					return NovelChapter {
+						order = i,
+						title = v:text(),
+						link = shrinkURL(v:attr("href")),
+					}
+				end)
+				(filter, function(chap)
+					local duplicate = dedup[chap:getLink()]
+					dedup[chap:getLink()] = true
+					return not duplicate
+				end)(AsList)())
 		end
 
 		return info
@@ -162,8 +164,8 @@ return {
 	search = function(data)
 		return parseTop(RequestDocument(
 			POST(expandURL("/detailed-search-210922"), nil,
-				RequestBody(qs({ keyword=data[QUERY], search=1 }), MediaType("application/x-www-form-urlencoded")))
-			))
+				RequestBody(qs({ keyword = data[QUERY], search = 1 }), MediaType("application/x-www-form-urlencoded")))
+		))
 	end,
 	updateSetting = updateSetting,
 }

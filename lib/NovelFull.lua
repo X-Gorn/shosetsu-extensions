@@ -27,17 +27,17 @@ function defaults:search(data)
 	local doc = GETDocument(qs({ keyword = data[QUERY], page = data[PAGE] }, self.baseURL .. "/search"))
 
 	return map(doc:selectFirst("div." .. self.searchListSel):select("div.row"), function(v)
-			local novel = Novel()
-			novel:setImageURL(v:selectFirst("img.cover"):attr("src"))
-			local d = v:selectFirst(self.searchTitleSel .. " a")
-			novel:setLink(d:attr("href"))
-			novel:setTitle(d:attr("title"))
-			return novel
-		end)
+		local novel = Novel()
+		novel:setImageURL(v:selectFirst("img.cover"):attr("src"))
+		local d = v:selectFirst(self.searchTitleSel .. " a")
+		novel:setLink(d:attr("href"))
+		novel:setTitle(d:attr("title"))
+		return novel
+	end)
 end
 
 function defaults:getPassage(url)
-	local htmlElement = GETDocument(self.baseURL..url):selectFirst("div#chapter")
+	local htmlElement = GETDocument(self.baseURL .. url):selectFirst("div#chapter")
 	local title = htmlElement:selectFirst("a.chapter-title"):text()
 	htmlElement = htmlElement:selectFirst("div#chapter-content")
 
@@ -50,10 +50,12 @@ function defaults:getPassage(url)
 
 	-- Convert element to string
 	local stringElement = tostring(htmlElement)
-	
+
 	-- Translate text
-	local translatedText = RequestDocument(POST("http://165.22.242.237/translator", nil, RequestBody(qs({ text=stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst("div.text")
-	
+	local translatedText = RequestDocument(POST("https://api-aws.xgorn.pp.ua/translator", nil,
+		RequestBody(qs({ text = stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst(
+	"div.text")
+
 	-- Chapter title inserted before chapter text.
 	translatedText:child(0):before("<h1>" .. title .. "</h1>");
 
@@ -61,7 +63,7 @@ function defaults:getPassage(url)
 end
 
 function defaults:parseNovel(url, loadChapters)
-	local doc = GETDocument(self.baseURL..url)
+	local doc = GETDocument(self.baseURL .. url)
 	local info = NovelInfo()
 
 	local elem = doc:selectFirst(".info"):children()
@@ -76,10 +78,10 @@ function defaults:parseNovel(url, loadChapters)
 	info:setAuthors(meta_links(0))
 	info:setAlternativeTitles(meta_links(1))
 	info:setGenres(meta_links(2))
-	info:setStatus( ({
+	info:setStatus(({
 		Ongoing = NovelStatus.PUBLISHING,
 		Completed = NovelStatus.COMPLETED
-	})[elem:get(meta_offset + 4):select("a"):text()] )
+	})[elem:get(meta_offset + 4):select("a"):text()])
 
 	info:setImageURL((self.appendURLToInfoImage and self.baseURL or "") .. doc:selectFirst("div.book img"):attr("src"))
 	info:setDescription(table.concat(map(doc:select("div.desc-text p"), text), "\n"))
@@ -88,15 +90,16 @@ function defaults:parseNovel(url, loadChapters)
 		local id = doc:selectFirst("div[data-novel-id]"):attr("data-novel-id")
 		local i = 0
 		info:setChapters(AsList(map(
-				GETDocument(qs({ novelId = id,currentChapterId = "" }, self.ajax_base .. self.ajax_chapters)):selectFirst("select"):children(),
-				function(v)
-					local chap = NovelChapter()
-					chap:setLink(self.shrinkURL(v:attr("value")))
-					chap:setTitle(v:text())
-					chap:setOrder(i)
-					i = i + 1
-					return chap
-				end)))
+			GETDocument(qs({ novelId = id, currentChapterId = "" }, self.ajax_base .. self.ajax_chapters)):selectFirst(
+			"select"):children(),
+			function(v)
+				local chap = NovelChapter()
+				chap:setLink(self.shrinkURL(v:attr("value")))
+				chap:setTitle(v:text())
+				chap:setOrder(i)
+				i = i + 1
+				return chap
+			end)))
 	end
 
 	return info
@@ -113,10 +116,12 @@ function defaults:expandURL(url)
 end
 
 return function(baseURL, _self)
-	_self = setmetatable(_self or {}, { __index = function(_, k)
-		local d = defaults[k]
-		return (type(d) == "function" and wrap(_self, d) or d)
-	end })
+	_self = setmetatable(_self or {}, {
+		__index = function(_, k)
+			local d = defaults[k]
+			return (type(d) == "function" and wrap(_self, d) or d)
+		end
+	})
 	_self["baseURL"] = baseURL
 	if not _self["ajax_base"] then
 		_self["ajax_base"] = baseURL

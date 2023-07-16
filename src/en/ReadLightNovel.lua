@@ -32,8 +32,7 @@ end
 ---
 --- Notice, each key is surrounded by "[]" and the value is on the right side.
 local settings = {
-	[1] = "test",
-	[2] = false,
+	[1] = ""
 }
 
 --- Settings model for Shosetsu to render.
@@ -41,8 +40,7 @@ local settings = {
 --- Optional, Default is empty.
 ---
 local settingsModel = {
-	TextFilter(1, "API Key"),
-	SwitchFilter(2, "RANDOM SWITCH INPUT"),
+	PasswordFilter(1, "Password")
 }
 
 
@@ -98,8 +96,9 @@ return {
 		local elementString = tostring(htmlElement)
 		local apiKey = settings[1]
 		local translatedText = RequestDocument(POST("https://api-aws.xgorn.pp.ua/translator", nil,
-			RequestBody(qs({ text = elementString, api_key = apiKey }), MediaType("application/x-www-form-urlencoded"))))
-		:selectFirst("div.text")
+				RequestBody(qs({ text = elementString, api_key = apiKey }),
+					MediaType("application/x-www-form-urlencoded"))))
+			:selectFirst("div.text")
 		translatedText:child(0):before("<h1>" .. title .. "</h1>");
 		return pageOfElem(translatedText)
 	end,

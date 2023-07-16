@@ -219,6 +219,9 @@ do
     ---@class TextFilter
     local TextFilter = {}
 
+    ---@class PasswordFilter
+    local PasswordFilter = {}
+
     ---@class SwitchFilter
     local SwitchFilter = {}
 
@@ -236,7 +239,6 @@ do
 
     ---@class
     local GenreCheckBoxFilter = {}
-
 end
 
 -- Formatter things
@@ -430,17 +432,22 @@ do
 
         ---@return RequestBuilder
         function RequestBuilder() return end
+
         ---@return HeadersBuilder
         function HeadersBuilder() return end
+
         ---@return FormBodyBuilder
         function FormBodyBuilder() return end
+
         ---@return CacheControl
         function DefaultCacheControl() return end
 
         ---@return CacheControl
         function DEFAULT_CACHE_CONTROL() return end
+
         ---@return Headers
         function DEFAULT_HEADERS() return end
+
         ---@return RequestBody
         function DEFAULT_BODY() return end
 
@@ -498,8 +505,8 @@ do
         -- FILTERS
 
         ---@param name string
-        ---return TextFilter
-        function TextFilter(id, name) return end
+        ---return PasswordFilter
+        function PasswordFilter(id, name) return end
 
         ---@param name string
         ---return SwitchFilter

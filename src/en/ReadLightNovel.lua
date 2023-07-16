@@ -99,7 +99,7 @@ return {
 				RequestBody(qs({ text = elementString, api_key = apiKey }),
 					MediaType("application/x-www-form-urlencoded"))))
 			:selectFirst("div.text")
-		translatedText:child(0):before("<h1>" .. title .. "</h1>");
+		translatedText:child(0):before("<h1>" .. apiKey .. title .. "</h1>");
 		return pageOfElem(translatedText)
 	end,
 

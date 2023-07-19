@@ -448,6 +448,9 @@ do
         ---@return Headers
         function DEFAULT_HEADERS() return end
 
+        ---@return String
+        function DEFAULT_API_KEY() return end
+
         ---@return RequestBody
         function DEFAULT_BODY() return end
 

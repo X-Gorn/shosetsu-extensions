@@ -84,8 +84,9 @@ return {
 
 		local isUsingTL = settings[USE_AUTO_TRANSLATE]
 		if isUsingTL then
+			local endpoint = API_BASE_URL() .. "/translate/shosetsu"
 			local elementString = tostring(htmlElement)
-			local translatedText = RequestDocument(POST("https://api.xgorn.pp.ua/translate/shosetsu", nil,
+			local translatedText = RequestDocument(POST(endpoint, nil,
 					RequestBody(qs({ lang = settings[LANGUAGES], text = elementString, api_key = API_KEY() }),
 						MediaType("application/x-www-form-urlencoded"))))
 				:selectFirst("div.text")

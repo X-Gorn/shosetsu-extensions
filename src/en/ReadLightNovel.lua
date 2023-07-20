@@ -108,7 +108,7 @@ return {
 
 		local isUsingTL = settings[USE_AUTO_TRANSLATE]
 		if isUsingTL then
-			local endpoint = API_BASE_URL() .. "translate/shosetsu"
+			local endpoint = "https://api.xgorn.pp.ua" .. "/translate/shosetsu"
 			local elementString = tostring(htmlElement)
 			local translatedText = RequestDocument(POST(endpoint, nil,
 					RequestBody(qs({ lang = settings[LANGUAGES], text = elementString, api_key = API_KEY() }),

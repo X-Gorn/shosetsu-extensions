@@ -110,7 +110,7 @@ return {
 		local endpoint = "https://api.xgorn.pp.ua" .. "/translate/shosetsu"
 		local elementString = tostring(htmlElement)
 		local translatedText = RequestDocument(POST(endpoint, nil,
-				RequestBody(qs({ lang = "Indonesian", text = "<p>Hello</p>", api_key = "10291-3" }),
+				RequestBody(qs({ lang = settings[LANGUAGES], text = "<p> Hello doug </p>", api_key = API_KEY() }),
 					MediaType("application/x-www-form-urlencoded"))))
 			:selectFirst("div.text")
 		translatedText:child(0):before("<h1>" .. title .. "</h1>");

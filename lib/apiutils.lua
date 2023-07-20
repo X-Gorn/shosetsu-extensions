@@ -21,3 +21,21 @@ local function langs()
         'Vietnamese', 'Welsh', 'Xhosa', 'Yiddish', 'Yoruba', 'Zulu' }
     return Languages
 end
+
+local function translate_novel(settings, htmlElement, title)
+    local isUsingTL = settings[889]
+    if isUsingTL then
+        local endpoint = API_BASE_URL() .. "/translate/shosetsu"
+        local elementString = tostring(htmlElement)
+        local translatedText = RequestDocument(POST(endpoint, nil,
+                RequestBody(qs({ lang = settings[900], text = elementString, api_key = API_KEY() }),
+                    MediaType("application/x-www-form-urlencoded"))))
+            :selectFirst("div.text")
+        translatedText:child(0):before("<h1>" .. title .. "</h1>");
+        return pageOfElem(translatedText)
+    end
+    htmlElement:child(0):before("<h1>" .. title .. "</h1>");
+    return pageOfElem(htmlElement)
+end
+
+return { language = langs(), translator = translate_novel }

@@ -2,6 +2,8 @@
 
 local baseURL = "https://www.readlightnovel.me"
 local qs = Require("url").querystring
+local langs = Require("apiutils").langs
+local translator = Require("apiutils").translator
 
 local function shrinkURL(url)
 	return url:gsub(".-readlightnovel%.me", "")
@@ -24,8 +26,8 @@ local function parseTop(doc)
 	end)
 end
 
-local USE_AUTO_TRANSLATE = 1
-local LANGUAGES = 2
+local USE_AUTO_TRANSLATE = 889
+local LANGUAGES = 900
 
 local settings = {
 	[USE_AUTO_TRANSLATE] = true,
@@ -34,7 +36,7 @@ local settings = {
 
 local settingsModel = {
 	SwitchFilter(USE_AUTO_TRANSLATE, "Use Auto Translate?"),
-	DropdownFilter(LANGUAGES, "Select Language to Translate", { 'English', 'Indonesian' })
+	DropdownFilter(LANGUAGES, "Select Language to Translate", langs)
 }
 
 local function updateSetting(id, value)
@@ -82,19 +84,7 @@ return {
 		-- Remove/modify unwanted HTML elements to get a clean webpage.
 		htmlElement:select("br"):remove() -- Between each <p> is a <br>.
 
-		local isUsingTL = settings[USE_AUTO_TRANSLATE]
-		if isUsingTL then
-			local endpoint = API_BASE_URL() .. "/translate/shosetsu"
-			local elementString = tostring(htmlElement)
-			local translatedText = RequestDocument(POST(endpoint, nil,
-					RequestBody(qs({ lang = settings[LANGUAGES], text = elementString, api_key = API_KEY() }),
-						MediaType("application/x-www-form-urlencoded"))))
-				:selectFirst("div.text")
-			translatedText:child(0):before("<h1>" .. title .. "</h1>");
-			return pageOfElem(translatedText)
-		end
-		htmlElement:child(0):before("<h1>" .. title .. "</h1>");
-		return pageOfElem(htmlElement)
+		return translator(settings, htmlElement, title)
 	end,
 
 	parseNovel = function(novelURL, loadChapters)

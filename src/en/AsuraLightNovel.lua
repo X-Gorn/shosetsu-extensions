@@ -1,8 +1,8 @@
 -- {"id":1783,"ver":"1.0.2","libVer":"1.0.0","author":"Xanvial","dep":["Madara>=2.4.0"]}
 
-return Require("Madara")("https://asuralightnovel.com",{
+return Require("Madara")("https://asuralightnovel.com", {
 	id = 1783,
-	name = "Asura Light Novel",
+	name = "Asura Light Novel" .. API_BASE_URL(),
 	imageURL = "https://asuralightnovel.com/wp-content/uploads/2017/10/asura-light-novel-logo-4-e1627846850601.png",
 
 	searchHasOper = true,

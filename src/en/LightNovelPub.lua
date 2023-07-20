@@ -337,19 +337,12 @@ local function getPassage(chapterURL)
     -- Remove unwanted HTML elements (ads)
     chapter:select(".adsbygoogle"):parents():remove()
 
-    local isUsingTL = settings[USE_AUTO_TRANSLATE]
-    if isUsingTL then
-        local endpoint = "https://api.xgorn.pp.ua" .. "/translate/shosetsu"
-        local elementString = tostring(chapter)
-        local translatedText = RequestDocument(POST(endpoint, nil,
-                RequestBody(qs({ lang = settings[LANGUAGES], text = elementString, api_key = API_KEY() }),
-                    MediaType("application/x-www-form-urlencoded"))))
-            :selectFirst("div.text")
-        translatedText:child(0):before("<h1>" .. title .. "</h1>");
-        return pageOfElem(translatedText)
-    end
-    chapter:child(0):before("<h1>" .. title .. "</h1>");
-    return pageOfElem(chapter)
+    local elementString = tostring(chapter)
+    local translatedText = RequestDocument(POST("https://api-aws.xgorn.pp.ua/translator", nil,
+        RequestBody(qs({ text = stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst(
+        "div.text")
+    translatedText:child(0):before("<h1>" .. title .. "</h1>");
+    return pageOfElem(translatedText)
 end
 
 --- Load info on a novel.

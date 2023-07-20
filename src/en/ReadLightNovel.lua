@@ -24,30 +24,19 @@ local function parseTop(doc)
 	end)
 end
 
+local USE_AUTO_TRANSLATE = 1
+local LANGUAGES = 2
 
---- Internal settings store.
----
---- Completely optional.
----  But required if you want to save results from [updateSetting].
----
---- Notice, each key is surrounded by "[]" and the value is on the right side.
 local settings = {
-	[1] = ""
+	[USE_AUTO_TRANSLATE] = true,
+	[LANGUAGES] = 'Indonesian'
 }
 
---- Settings model for Shosetsu to render.
----
---- Optional, Default is empty.
----
 local settingsModel = {
-	PasswordFilter(1, "Password")
+	SwitchFilter(USE_AUTO_TRANSLATE, "Use Auto Translate?"),
+	DropdownFilter(LANGUAGES, "Select Language to Translate", { 'English', 'Indonesian' })
 }
 
-
---- Called when a user changes a setting and when the extension is being initialized.
----
---- Optional, But required if [settingsModel] is not empty.
----
 local function updateSetting(id, value)
 	settings[id] = value
 end
@@ -93,14 +82,18 @@ return {
 		-- Remove/modify unwanted HTML elements to get a clean webpage.
 		htmlElement:select("br"):remove() -- Between each <p> is a <br>.
 
-		local elementString = tostring(htmlElement)
-		local apiKey = settings[1]
-		local translatedText = RequestDocument(POST("https://api-aws.xgorn.pp.ua/translator", nil,
-				RequestBody(qs({ text = elementString, api_key = apiKey }),
-					MediaType("application/x-www-form-urlencoded"))))
-			:selectFirst("div.text")
-		translatedText:child(0):before("<h1>" .. DEFAULT_API_KEY() .. title .. "</h1>");
-		return pageOfElem(translatedText)
+		local isUsingTL = settings[USE_AUTO_TRANSLATE]
+		if isUsingTL then
+			local elementString = tostring(htmlElement)
+			local translatedText = RequestDocument(POST(API_BASE_URL() .. "/translate/shosetsu", nil,
+					RequestBody(qs({ lang = settings[LANGUAGES], text = elementString, api_key = API_KEY() }),
+						MediaType("application/x-www-form-urlencoded"))))
+				:selectFirst("div.text")
+			translatedText:child(0):before("<h1>" .. title .. "</h1>");
+			return pageOfElem(translatedText)
+		end
+		htmlElement:child(0):before("<h1>" .. title .. "</h1>");
+		return pageOfElem(htmlElement)
 	end,
 
 	parseNovel = function(novelURL, loadChapters)

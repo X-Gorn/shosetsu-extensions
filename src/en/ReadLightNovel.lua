@@ -106,10 +106,12 @@ return {
 		-- Remove/modify unwanted HTML elements to get a clean webpage.
 		htmlElement:select("br"):remove() -- Between each <p> is a <br>.
 
+
 		local endpoint = "https://api.xgorn.pp.ua" .. "/translate/shosetsu"
 		local elementString = tostring(htmlElement)
 		local translatedText = RequestDocument(POST(endpoint, nil,
-				RequestBody(qs({ lang = settings[LANGUAGES], text = elementString, api_key = API_KEY() }))))
+				RequestBody(qs({ lang = settings[LANGUAGES], text = elementString, api_key = API_KEY() }),
+					MediaType("application/x-www-form-urlencoded"))))
 			:selectFirst("div.text")
 		translatedText:child(0):before("<h1>" .. title .. "</h1>");
 		return pageOfElem(translatedText)

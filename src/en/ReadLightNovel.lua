@@ -24,49 +24,6 @@ local function parseTop(doc)
 	end)
 end
 
-local USE_AUTO_TRANSLATE = 889
-local LANGUAGES = 900
-
-local settings = {
-	[USE_AUTO_TRANSLATE] = true,
-	[LANGUAGES] = 'Indonesian'
-}
-
-local settingsModel = {
-	SwitchFilter(USE_AUTO_TRANSLATE, "Use Auto Translate?"),
-	DropdownFilter(LANGUAGES, "Select Language to Translate",
-		{ 'Afrikaans', 'Albanian', 'Amharic', 'Arabic', 'Armenian', 'Assamese', 'Aymara', 'Azerbaijani',
-			'Bambara', 'Basque', 'Belarusian', 'Bengali', 'Bhojpuri', 'Bosnian', 'Bulgarian', 'Catalan', 'Cebuano',
-			'Chichewa',
-			'Chinese (simplified)', 'Chinese (traditional)', 'Corsican', 'Croatian', 'Czech', 'Danish', 'Dhivehi',
-			'Dogri',
-			'Dutch', 'English', 'Esperanto', 'Estonian', 'Ewe', 'Filipino', 'Finnish', 'French', 'Frisian', 'Galician',
-			'Georgian', 'German', 'Greek', 'Guarani', 'Gujarati', 'Haitian creole', 'Hausa', 'Hawaiian', 'Hebrew',
-			'Hindi',
-			'Hmong', 'Hungarian', 'Icelandic', 'Igbo', 'Ilocano', 'Indonesian', 'Irish', 'Italian', 'Japanese',
-			'Javanese',
-			'Kannada', 'Kazakh', 'Khmer', 'Kinyarwanda', 'Konkani', 'Korean', 'Krio', 'Kurdish (kurmanji)',
-			'Kurdish (sorani)',
-			'Kyrgyz', 'Lao', 'Latin', 'Latvian', 'Lingala', 'Lithuanian', 'Luganda', 'Luxembourgish', 'Macedonian',
-			'Maithili',
-			'Malagasy', 'Malay', 'Malayalam', 'Maltese', 'Maori', 'Marathi', 'Meiteilon (manipuri)', 'Mizo', 'Mongolian',
-			'Myanmar', 'Nepali', 'Norwegian', 'Odia (oriya)', 'Oromo', 'Pashto', 'Persian', 'Polish', 'Portuguese',
-			'Punjabi',
-			'Quechua', 'Romanian', 'Russian', 'Samoan', 'Sanskrit', 'Scots gaelic', 'Sepedi', 'Serbian', 'Sesotho',
-			'Shona',
-			'Sindhi', 'Sinhala', 'Slovak', 'Slovenian', 'Somali', 'Spanish', 'Sundanese', 'Swahili', 'Swedish', 'Tajik',
-			'Tamil',
-			'Tatar', 'Telugu', 'Thai', 'Tigrinya', 'Tsonga', 'Turkish', 'Turkmen', 'Twi', 'Ukrainian', 'Urdu', 'Uyghur',
-			'Uzbek',
-			'Vietnamese', 'Welsh', 'Xhosa', 'Yiddish', 'Yoruba', 'Zulu' })
-}
-
-local function updateSetting(id, value)
-	settings[id] = value
-end
-
-
-
 -- utils to make the code more linearly
 -- TODO: move these to kotlin-lib luaFuncs
 local function identity(...)
@@ -170,12 +127,10 @@ return {
 
 		return info
 	end,
-	settings = settingsModel,
 	search = function(data)
 		return parseTop(RequestDocument(
 			POST(expandURL("/detailed-search-210922"), nil,
 				RequestBody(qs({ keyword = data[QUERY], search = 1 }), MediaType("application/x-www-form-urlencoded")))
 		))
-	end,
-	updateSetting = updateSetting,
+	end
 }

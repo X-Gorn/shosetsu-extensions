@@ -2,7 +2,7 @@
 
 return Require("Madara")("https://asuralightnovel.com", {
 	id = 1783,
-	name = "Asura Light Novel" .. API_BASE_URL(),
+	name = "Asura Light Novel",
 	imageURL = "https://asuralightnovel.com/wp-content/uploads/2017/10/asura-light-novel-logo-4-e1627846850601.png",
 
 	searchHasOper = true,

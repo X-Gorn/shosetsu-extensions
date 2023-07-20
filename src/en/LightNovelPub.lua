@@ -168,23 +168,45 @@ local searchFilters = {
     DropdownFilter(STATUS_KEY, "Status", { "All", "Completed", "Ongoing" })
 }
 
---- Internal settings store.
----
---- Completely optional.
----  But required if you want to save results from [updateSetting].
----
---- Notice, each key is surrounded by "[]" and the value is on the right side.
---- @type table
+
+local USE_AUTO_TRANSLATE = 889
+local LANGUAGES = 900
+
 local settings = {
-    [1] = 0
+    [1] = 0,
+    [USE_AUTO_TRANSLATE] = true,
+    [LANGUAGES] = 'Indonesian'
 }
 
---- Settings model for Shosetsu to render.
----
---- Optional, Default is empty.
----
---- @type Filter[] | Array
-local settingsModel = {}
+local settingsModel = {
+    SwitchFilter(USE_AUTO_TRANSLATE, "Use Auto Translate?"),
+    DropdownFilter(LANGUAGES, "Select Language to Translate",
+        { 'Afrikaans', 'Albanian', 'Amharic', 'Arabic', 'Armenian', 'Assamese', 'Aymara', 'Azerbaijani',
+            'Bambara', 'Basque', 'Belarusian', 'Bengali', 'Bhojpuri', 'Bosnian', 'Bulgarian', 'Catalan', 'Cebuano',
+            'Chichewa',
+            'Chinese (simplified)', 'Chinese (traditional)', 'Corsican', 'Croatian', 'Czech', 'Danish', 'Dhivehi',
+            'Dogri',
+            'Dutch', 'English', 'Esperanto', 'Estonian', 'Ewe', 'Filipino', 'Finnish', 'French', 'Frisian', 'Galician',
+            'Georgian', 'German', 'Greek', 'Guarani', 'Gujarati', 'Haitian creole', 'Hausa', 'Hawaiian', 'Hebrew',
+            'Hindi',
+            'Hmong', 'Hungarian', 'Icelandic', 'Igbo', 'Ilocano', 'Indonesian', 'Irish', 'Italian', 'Japanese',
+            'Javanese',
+            'Kannada', 'Kazakh', 'Khmer', 'Kinyarwanda', 'Konkani', 'Korean', 'Krio', 'Kurdish (kurmanji)',
+            'Kurdish (sorani)',
+            'Kyrgyz', 'Lao', 'Latin', 'Latvian', 'Lingala', 'Lithuanian', 'Luganda', 'Luxembourgish', 'Macedonian',
+            'Maithili',
+            'Malagasy', 'Malay', 'Malayalam', 'Maltese', 'Maori', 'Marathi', 'Meiteilon (manipuri)', 'Mizo', 'Mongolian',
+            'Myanmar', 'Nepali', 'Norwegian', 'Odia (oriya)', 'Oromo', 'Pashto', 'Persian', 'Polish', 'Portuguese',
+            'Punjabi',
+            'Quechua', 'Romanian', 'Russian', 'Samoan', 'Sanskrit', 'Scots gaelic', 'Sepedi', 'Serbian', 'Sesotho',
+            'Shona',
+            'Sindhi', 'Sinhala', 'Slovak', 'Slovenian', 'Somali', 'Spanish', 'Sundanese', 'Swahili', 'Swedish', 'Tajik',
+            'Tamil',
+            'Tatar', 'Telugu', 'Thai', 'Tigrinya', 'Tsonga', 'Turkish', 'Turkmen', 'Twi', 'Ukrainian', 'Urdu', 'Uyghur',
+            'Uzbek',
+            'Vietnamese', 'Welsh', 'Xhosa', 'Yiddish', 'Yoruba', 'Zulu' })
+}
+
 
 --- ChapterType provided by the extension.
 ---
@@ -315,18 +337,19 @@ local function getPassage(chapterURL)
     -- Remove unwanted HTML elements (ads)
     chapter:select(".adsbygoogle"):parents():remove()
 
-    -- Convert element to string
-    local stringElement = tostring(chapter)
-
-    -- Translate text
-    local translatedText = RequestDocument(POST("https://api-aws.xgorn.pp.ua/translator", nil,
-        RequestBody(qs({ text = stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst(
-    "div.text")
-
-    -- Insert title
-    translatedText:child(0):before("<h1>" .. title .. "</h1>");
-
-    return pageOfElem(translatedText, true)
+    local isUsingTL = settings[USE_AUTO_TRANSLATE]
+    if isUsingTL then
+        local endpoint = API_BASE_URL() .. "/translate/shosetsu"
+        local elementString = tostring(chapter)
+        local translatedText = RequestDocument(POST(endpoint, nil,
+                RequestBody(qs({ lang = settings[LANGUAGES], text = elementString, api_key = API_KEY() }),
+                    MediaType("application/x-www-form-urlencoded"))))
+            :selectFirst("div.text")
+        translatedText:child(0):before("<h1>" .. title .. "</h1>");
+        return pageOfElem(translatedText)
+    end
+    chapter:child(0):before("<h1>" .. title .. "</h1>");
+    return pageOfElem(chapter)
 end
 
 --- Load info on a novel.
@@ -385,7 +408,7 @@ local function parseNovel(novelURL)
     local chaptersTable = {}
     repeat
         local chaptersPageUrl = nextLinkNode ~= nil and (baseURL .. nextLinkNode:attr("href"):sub(2)) or
-        (url .. "/chapters/")
+            (url .. "/chapters/")
         local chaptersDocument = GETDocument(chaptersPageUrl):selectFirst("#chpagedlist")
         nextLinkNode = chaptersDocument:selectFirst(".pagination .PagedList-skipToNext a")
         local pageChaptersTable = map(chaptersDocument:select(".chapter-list a"), function(ni)

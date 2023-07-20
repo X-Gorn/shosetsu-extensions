@@ -307,7 +307,7 @@ local function getPassage(chapterURL)
 
     local elementString = tostring(chapter)
     local translatedText = RequestDocument(POST("https://api-aws.xgorn.pp.ua/translator", nil,
-        RequestBody(qs({ text = stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst(
+        RequestBody(qs({ text = elementString }), MediaType("application/x-www-form-urlencoded")))):selectFirst(
         "div.text")
     translatedText:child(0):before("<h1>" .. title .. "</h1>");
     return pageOfElem(translatedText)

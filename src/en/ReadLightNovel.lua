@@ -106,16 +106,13 @@ return {
 		-- Remove/modify unwanted HTML elements to get a clean webpage.
 		htmlElement:select("br"):remove() -- Between each <p> is a <br>.
 
-		local isUsingTL = settings[USE_AUTO_TRANSLATE]
-		if isUsingTL then
-			local endpoint = "https://api.xgorn.pp.ua" .. "/translate/shosetsu"
-			local elementString = tostring(htmlElement)
-			local translatedText = RequestDocument(POST(endpoint, nil,
-					RequestBody(qs({ lang = settings[LANGUAGES], text = elementString, api_key = API_KEY() }))))
-				:selectFirst("div.text")
-			translatedText:child(0):before("<h1>" .. title .. "</h1>");
-			return pageOfElem(translatedText)
-		end
+		local endpoint = "https://api.xgorn.pp.ua" .. "/translate/shosetsu"
+		local elementString = tostring(htmlElement)
+		local translatedText = RequestDocument(POST(endpoint, nil,
+				RequestBody(qs({ lang = settings[LANGUAGES], text = elementString, api_key = API_KEY() }))))
+			:selectFirst("div.text")
+		translatedText:child(0):before("<h1>" .. title .. "</h1>");
+		return pageOfElem(translatedText)
 	end,
 
 	parseNovel = function(novelURL, loadChapters)

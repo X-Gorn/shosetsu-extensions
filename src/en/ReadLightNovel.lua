@@ -2,7 +2,6 @@
 
 local baseURL = "https://www.readlightnovel.me"
 local qs = Require("url").querystring
-local Langs = Require("languages").langs
 
 local function shrinkURL(url)
 	return url:gsub(".-readlightnovel%.me", "")
@@ -35,7 +34,7 @@ local settings = {
 
 local settingsModel = {
 	SwitchFilter(USE_AUTO_TRANSLATE, "Use Auto Translate?"),
-	DropdownFilter(LANGUAGES, "Select Language to Translate", Langs)
+	DropdownFilter(LANGUAGES, "Select Language to Translate", { 'English', 'Indonesian' })
 }
 
 local function updateSetting(id, value)

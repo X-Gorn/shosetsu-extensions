@@ -312,7 +312,7 @@ local function getPassage(chapterURL)
         :add("lang", "Indonesian")
         :add("html_text", elementString):build()
     ))
-    local raw_html = json.decode(res:body():string())
+    local raw_html = json.decode(res:selectFirst('body'):text())
     local translatedText = Document(raw_html.html_text)
     translatedText:child(0):before("<h1>" .. title .. "</h1>");
     return pageOfElem(translatedText)

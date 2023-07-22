@@ -336,11 +336,13 @@ local function parseNovel(novelURL)
             return nat:text()
         end
     ))
-    local res = RequestDocument(GET("https://api.xgorn.pp.ua/scrape/readlightnovel?title=" ..
-        document:selectFirst(".novel-info .novel-title"):text():gsub("[^%w%s]", ""):gsub(" ", "%%20")))
+    local novelTitle = document:selectFirst(".novel-info .novel-title"):text()
+    local res = RequestDocument(POST("https://api.xgorn.pp.ua/scrape/readlightnovel", nil,
+        FormBodyBuilder()
+        :add("title", novelTitle):build()
+    ))
     local js = json.decode(res:toString():sub(33, -18))
-    local cover = js.cover
-    ni:setImageURL(cover)
+    ni:setImageURL(js.cover)
     -- ni:setImageURL(document:selectFirst(".cover img"):attr("src"))
     ni:setDescription(table.concat(
         map(

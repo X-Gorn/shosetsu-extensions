@@ -336,13 +336,13 @@ local function parseNovel(novelURL)
             return nat:text()
         end
     ))
-    local novelTitle = document:selectFirst(".novel-info .novel-title"):text()
-    local res = RequestDocument(POST("https://api.xgorn.pp.ua/scrape/readlightnovel", nil,
-        FormBodyBuilder()
-        :add("title", novelTitle):build()
-    ))
-    local js = json.decode(res:toString():sub(33, -18))
-    ni:setImageURL(js.cover)
+    --local novelTitle = document:selectFirst(".novel-info .novel-title"):text()
+    --local res = RequestDocument(POST("https://api.xgorn.pp.ua/scrape/readlightnovel", nil,
+    --    FormBodyBuilder()
+    --    :add("title", novelTitle):build()
+    --))
+    --local js = json.decode(res:toString():sub(33, -18))
+    --ni:setImageURL(js.cover)
     -- ni:setImageURL(document:selectFirst(".cover img"):attr("src"))
     ni:setDescription(table.concat(
         map(

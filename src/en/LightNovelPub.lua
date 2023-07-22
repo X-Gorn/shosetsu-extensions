@@ -218,9 +218,12 @@ local function getSelective(url)
 
     return map(document:select("img"), function(ni)
         local n = Novel()
+        local JsonText = RequestDocument(POST("https://api.xgorn.pp.ua/scrape/readlightnovel", nil,
+            RequestBody(qs({ title = ni:attr("alt") }), MediaType("application/x-www-form-urlencoded"))))
+        local cover = json.decode(JsonText:selectFirst('body'):text())['cover']
         n:setTitle(ni:attr("alt"))
         n:setLink(shrinkURL(url, KEY_NOVEL_URL):gsub("%-%d+$", ""))
-        n:setImageURL(ni:attr("src"))
+        n:setImageURL(cover)
         return n
     end)
 end
@@ -306,9 +309,10 @@ local function getPassage(chapterURL)
     chapter:select(".adsbygoogle"):parents():remove()
 
     local elementString = tostring(chapter)
-    local translatedText = RequestDocument(POST("https://api-aws.xgorn.pp.ua/translator", nil,
-        RequestBody(qs({ text = elementString }), MediaType("application/x-www-form-urlencoded")))):selectFirst(
-        "div.text")
+    local JsonText = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
+        RequestBody(qs({ html_text = elementString }), MediaType("application/x-www-form-urlencoded"))))
+    local raw_html = json.decode(JsonText:selectFirst('body'):text())['html_text']
+    local translatedText = Document(raw_html)
     translatedText:child(0):before("<h1>" .. title .. "</h1>");
     return pageOfElem(translatedText)
 end

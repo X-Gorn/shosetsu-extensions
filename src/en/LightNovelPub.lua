@@ -218,12 +218,9 @@ local function getSelective(url)
 
     return map(document:select("img"), function(ni)
         local n = Novel()
-        local res = RequestDocument(GET("https://api.xgorn.pp.ua/scrape/readlightnovel?title=" .. url))
-        local js = json.decode(res:toString():sub(33, -18))
-        local cover = js.cover
         n:setTitle(ni:attr("alt"))
         n:setLink(shrinkURL(url, KEY_NOVEL_URL):gsub("%-%d+$", ""))
-        n:setImageURL(cover)
+        n:setImageURL(ni:attr("src"))
         return n
     end)
 end
@@ -339,7 +336,12 @@ local function parseNovel(novelURL)
             return nat:text()
         end
     ))
-    ni:setImageURL(document:selectFirst(".cover img"):attr("src"))
+    local res = RequestDocument(GET("https://api.xgorn.pp.ua/scrape/readlightnovel?title=" ..
+        document:selectFirst(".novel-info .novel-title"):text():gsub("[^%w%s]", ""):gsub(" ", "%%20")))
+    local js = json.decode(res:toString():sub(33, -18))
+    local cover = js.cover
+    ni:setImageURL(cover)
+    -- ni:setImageURL(document:selectFirst(".cover img"):attr("src"))
     ni:setDescription(table.concat(
         map(
             document:select(".summary .content p"),

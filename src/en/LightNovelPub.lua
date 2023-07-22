@@ -307,10 +307,8 @@ local function getPassage(chapterURL)
     chapter:select(".adsbygoogle"):parents():remove()
 
     local elementString = tostring(chapter)
-    local JsonText = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
-        RequestBody(qs({ html_text = elementString, lang = 'Indonesian' }),
-            MediaType("application/x-www-form-urlencoded"))))
-    local raw_html = json.decode(JsonText:selectFirst('body'):text())['html_text']
+    js_text = json.POST("https://api.xgorn.pp.ua/translate/html", { lang = 'Indonesian', html_text = elementString })
+    local raw_html = js_text.html_text
     local translatedText = Document(raw_html)
     translatedText:child(0):before("<h1>" .. title .. "</h1>");
     return pageOfElem(translatedText)

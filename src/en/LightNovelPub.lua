@@ -218,7 +218,9 @@ local function getSelective(url)
 
     return map(document:select("img"), function(ni)
         local n = Novel()
-        local cover = json.GET("https://api.xgorn.pp.ua/scrape/readlightnovel?title=" .. url).cover
+        local res = RequestDocument(GET("https://api.xgorn.pp.ua/scrape/readlightnovel?title=" .. url))
+        local js = json.decode(res:toString():sub(33, -18))
+        local cover = js.cover
         n:setTitle(ni:attr("alt"))
         n:setLink(shrinkURL(url, KEY_NOVEL_URL):gsub("%-%d+$", ""))
         n:setImageURL(cover)

@@ -1,0 +1,47 @@
+-- {"id":4342526,"ver":"1.0.0","libVer":"1.0.0","author":"X-Gorn","dep":["Madara>=2.2.0"]}
+
+
+return Require("Madara")("https://novelr18.com", {
+    id = 4342526,
+    name = "NovelR18",
+    latestNovelSel = "div.col-6.col-md-2.badge-pos-1",
+    imageURL = "https://novelr18.com/wp-content/uploads/2022/07/cropped-fav_-192x192.png",
+    chaptersScriptLoaded = true,
+    hasCloudFlare = true,
+    hasSearch = true,
+    genres = {
+        "Action",
+        "Adult",
+        "Adventure",
+        "Comedy",
+        "Drama",
+        "Ecchi",
+        "Fantasy",
+        "Gender Bender",
+        "Harem",
+        "Historical",
+        "Horror",
+        "Josei",
+        "Martial Arts",
+        "Mature",
+        "Mecha",
+        "Mystery",
+        "Psychological",
+        "Romance",
+        "School Life",
+        "Sci-fi",
+        "Seinen",
+        "Shoujo",
+        "Shounen",
+        "Slice of Life",
+        "Smut",
+        "Sports",
+        "Supernatural",
+        "Tragedy",
+        "Wuxia",
+        "Xianxia",
+        "Xuanhuan",
+        "Yaoi",
+        "Yuri"
+    }
+})

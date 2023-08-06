@@ -68,7 +68,7 @@ return {
     end,
     getPassage = function(chapterURL)
         local document = GETDocument(expandURL(chapterURL))
-        local chapter = document:selectFirst("div.epcontent.entry-content")
+        local chapter = document:selectFirst("div.epcontent")
 
         local elementString = tostring(chapter)
         local res = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,

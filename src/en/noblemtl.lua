@@ -37,7 +37,7 @@ return {
         end), "\n"))
 
         local sta = document:selectFirst("div.info-content span:nth-child(1)"):text()
-        sta:select("b"):remove()
+        local t = sta:gsub("Status: ", "")
         novelInfo:setStatus(NovelStatus(t == "Completed" and 1 or t == "Hiatus" and 2 or t == "Ongoing" and 0 or 3))
 
         novelInfo:setAuthors(map(document:select("div.info-content span:nth-child(3) a"), function(v)

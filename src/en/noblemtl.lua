@@ -67,20 +67,7 @@ return {
         return novelInfo
     end,
     getPassage = function(chapterURL)
-        local ddocument = GETDocument(expandURL(chapterURL))
-        local title = document:selectFirst("div.cat-series"):text()
-        local chapter = document:selectFirst("div.epcontent.entry-content")
-
-        local elementString = tostring(chapter)
-        local res = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
-            FormBodyBuilder()
-            :add("lang", "Indonesian")
-            :add("html_text", elementString):build()
-        ))
-        local raw_html = json.decode(res:toString():sub(33, -18))
-        local translatedText = Document(raw_html.html_text)
-        translatedText:child(0):before("<h1>" .. title .. "</h1>");
-        return pageOfElem(translatedText)
+        return expandURL(chapterURL)
     end,
     search = function(data)
         local d = GETDocument(baseURL .. "/?s=" .. data[QUERY])

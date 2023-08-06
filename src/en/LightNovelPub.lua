@@ -1,6 +1,5 @@
 -- {"id":31,"ver":"1.0.0","libVer":"1.0.0","author":"Gta-Cool"}
 
-local qs = Require("url").querystring
 local json = Require("dkjson")
 
 --- Identification number of the extension.

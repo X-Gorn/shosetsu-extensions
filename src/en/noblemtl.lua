@@ -1,6 +1,8 @@
 -- {"id":62932547,"ver":"1.0.0","libVer":"1.0.0","author":"pxkazuki"}
 local baseURL = "https://noblemtl.com"
 
+local json = Require("dkjson")
+
 local function shrinkURL(url)
     return url:gsub(baseURL, "")
 end
@@ -65,10 +67,20 @@ return {
         return novelInfo
     end,
     getPassage = function(chapterURL)
-        local d = GETDocument(expandURL(chapterURL))
-        return table.concat(map(d:select("article p"), function(v)
-            return v:text()
-        end), "\n")
+        local ddocument = GETDocument(expandURL(chapterURL))
+        local title = document:selectFirst("#content div.cat-series"):text()
+        local chapter = document:selectFirst("#content div.epcontent.entry-content")
+
+        local elementString = tostring(chapter)
+        local res = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
+            FormBodyBuilder()
+            :add("lang", "Indonesian")
+            :add("html_text", elementString):build()
+        ))
+        local raw_html = json.decode(res:toString():sub(33, -18))
+        local translatedText = Document(raw_html.html_text)
+        translatedText:child(0):before("<h1>" .. title .. "</h1>");
+        return pageOfElem(translatedText)
     end,
     search = function(data)
         local d = GETDocument(baseURL .. "/?s=" .. data[QUERY])

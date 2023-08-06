@@ -639,6 +639,16 @@
       "ver": "1.0.0",
       "libVer": "1.0.0",
       "md5": ""
+    },
+    {
+      "name": "NobleMTL",
+      "fileName": "noblemtl",
+      "imageURL": "https://i1.wp.com/noblemtl.com/wp-content/uploads/2022/07/cropped-Noble-192x192.png",
+      "id": 62932547,
+      "lang": "en",
+      "ver": "1.0.0",
+      "libVer": "1.0.0",
+      "md5": ""
     }
   ]
 }

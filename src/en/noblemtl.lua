@@ -78,7 +78,7 @@ return {
         ))
         local raw_html = json.decode(res:toString():sub(33, -18))
         local translatedText = Document(raw_html.html_text)
-        return raw_html.html_text
+        return translatedText
     end,
     search = function(data)
         local d = GETDocument(baseURL .. "/?s=" .. data[QUERY])

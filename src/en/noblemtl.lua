@@ -78,7 +78,6 @@ return {
         ))
         local raw_html = json.decode(res:toString():sub(33, -18))
         local translatedText = Document(raw_html.html_text)
-        translatedText:child(0):before("<h1>" .. "Big Title" .. "</h1>");
         return pageOfElem(translatedText)
     end,
     search = function(data)

@@ -24,7 +24,7 @@ return {
             return map(d:select("div.listupd article.bs"), function(v)
                 return Novel {
                     title = v:select("a"):attr("title"),
-                    imageURL = v:select("img"):attr("src"),
+                    imageURL = v:select("img"):attr("data-src"),
                     link = shrinkURL(v:select("a"):attr("href"))
                 }
             end)
@@ -33,7 +33,7 @@ return {
         local document = GETDocument(expandURL(novelURL)):selectFirst("article")
         local novelInfo = NovelInfo()
         novelInfo:setTitle(document:select("h1"):text())
-        novelInfo:setImageURL(document:select("div.thumb img"):attr("src"))
+        novelInfo:setImageURL(document:select("div.thumb img"):attr("data-src"))
         novelInfo:setDescription(table.concat(map(document:select("div.entry-content"), function(v)
             return v:text()
         end), "\n"))

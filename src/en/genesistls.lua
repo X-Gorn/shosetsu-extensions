@@ -52,7 +52,7 @@ return {
 
         if loadChapters then
             local listOfChapters = document:select("div.bixbox.bxcl.epcheck div ul a")
-            if listOfChapters:select('div.epl-price').text == 'Free' then
+            if listOfChapters:selectFirst('div.epl-price').text == 'Free' then
                 local count = listOfChapters:size()
                 local chapterList = AsList(map(listOfChapters, function(v)
                     local c = NovelChapter()

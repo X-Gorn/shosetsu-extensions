@@ -649,6 +649,16 @@
       "ver": "1.0.0",
       "libVer": "1.0.0",
       "md5": ""
+    },
+    {
+      "name": "GenesisTLS",
+      "fileName": "genesistls",
+      "imageURL": "https://genesistls.com/wp-content/uploads/2022/04/logo.png",
+      "id": 14054904,
+      "lang": "en",
+      "ver": "1.0.0",
+      "libVer": "1.0.0",
+      "md5": ""
     }
   ]
 }

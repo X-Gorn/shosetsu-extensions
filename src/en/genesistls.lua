@@ -52,19 +52,19 @@ return {
 
         if loadChapters then
             local listOfChapters = document:select("div.bixbox.bxcl.epcheck div ul a")
-            if listOfChapters:selectFirst('div.epl-price').text == 'Free' then
-                local count = listOfChapters:size()
-                local chapterList = AsList(map(listOfChapters, function(v)
+            local count = listOfChapters:size()
+            local chapterList = AsList(map(listOfChapters, function(v)
+                if v:select('div.epl-price'):text() == 'Free' then
                     local c = NovelChapter()
                     c:setLink(shrinkURL(v:attr("href")))
                     c:setTitle(v:select("div.epl-title"):text())
                     c:setOrder(count)
                     count = count - 1
                     return c
-                end))
-                Reverse(chapterList)
-                novelInfo:setChapters(chapterList)
-            end
+                end
+            end))
+            Reverse(chapterList)
+            novelInfo:setChapters(chapterList)
         end
         return novelInfo
     end,

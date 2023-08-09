@@ -63,7 +63,6 @@ return {
                     return c
                 end
             end))
-            Reverse(chapterList)
             novelInfo:setChapters(chapterList)
         end
         return novelInfo

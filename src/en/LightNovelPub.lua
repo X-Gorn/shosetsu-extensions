@@ -342,7 +342,7 @@ local function parseNovel(novelURL)
     --))
     --local js = json.decode(res:toString():sub(33, -18))
     --ni:setImageURL(js.cover)
-    ni:setImageURL(document:selectFirst(".novel-header .glass-background img"):attr("src"))
+    ni:setImageURL(document:selectFirst(".cover img"):attr("src"))
     ni:setDescription(table.concat(
         map(
             document:select(".summary .content p"),

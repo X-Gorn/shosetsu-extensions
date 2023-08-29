@@ -305,7 +305,7 @@ local function getPassage(chapterURL)
     chapter:select(".adsbygoogle"):parents():remove()
 
     local elementString = tostring(chapter)
-    local res = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
+    local res = RequestDocument(POST("https://api-aws.xgorn.pp.ua/translate/html", nil,
         FormBodyBuilder()
         :add("lang", "Indonesian")
         :add("html_text", elementString):build()
@@ -336,7 +336,7 @@ local function parseNovel(novelURL)
         end
     ))
     --local novelTitle = document:selectFirst(".novel-info .novel-title"):text()
-    --local res = RequestDocument(POST("https://api.xgorn.pp.ua/scrape/readlightnovel", nil,
+    --local res = RequestDocument(POST("https://api-aws.xgorn.pp.ua/scrape/readlightnovel", nil,
     --    FormBodyBuilder()
     --    :add("title", novelTitle):build()
     --))

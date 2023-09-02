@@ -64,7 +64,7 @@ return {
 		htmlElement:select("br"):remove() -- Between each <p> is a <br>.
 
 		local elementString = tostring(htmlElement)
-		local translatedText = RequestDocument(POST("https://api-aws.xgorn.pp.ua/translator", nil,
+		local translatedText = RequestDocument(POST("https://api.xgorn.pp.ua/translator", nil,
 			RequestBody(qs({ text = elementString }), MediaType("application/x-www-form-urlencoded")))):selectFirst(
 			"div.text")
 		translatedText:child(0):before("<h1>" .. title .. "</h1>");

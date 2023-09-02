@@ -52,7 +52,7 @@ function defaults:getPassage(url)
 	local stringElement = tostring(htmlElement)
 
 	-- Translate text
-	local translatedText = RequestDocument(POST("https://api-aws.xgorn.pp.ua/translator", nil,
+	local translatedText = RequestDocument(POST("https://api.xgorn.pp.ua/translator", nil,
 		RequestBody(qs({ text = stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst(
 	"div.text")
 

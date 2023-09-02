@@ -49,7 +49,7 @@ local STATUS_FILTER_KEY_ON_HOLD = 9
 
 function defaults:latest(data)
 	return self.parse(GETDocument(self.baseURL ..
-	"/" .. self.novelListingURLPath .. "/page/" .. data[PAGE] .. "/?m_orderby=latest" .. self.novelListingURLSuffix))
+		"/" .. self.novelListingURLPath .. "/page/" .. data[PAGE] .. "/?m_orderby=latest" .. self.novelListingURLSuffix))
 end
 
 ---@param tbl table
@@ -139,9 +139,9 @@ function defaults:getPassage(url)
 	local stringElement = tostring(htmlElement)
 
 	-- Translate text
-	local translatedText = RequestDocument(POST("https://api-aws.xgorn.pp.ua/translator", nil,
+	local translatedText = RequestDocument(POST("https://api.xgorn.pp.ua/translator", nil,
 		RequestBody(qs({ text = stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst(
-	"div.text")
+		"div.text")
 
 	-- Insert title
 	translatedText:prepend("<h1>" .. title .. "</h1>");

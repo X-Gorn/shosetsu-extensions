@@ -219,7 +219,7 @@ local function getSelective(url)
         local n = Novel()
         n:setTitle(ni:attr("alt"))
         n:setLink(shrinkURL(url, KEY_NOVEL_URL):gsub("%-%d+$", ""))
-        n:setImageURL(ni:attr("src"))
+        n:setImageURL(ni:attr("data-src"))
         return n
     end)
 end
@@ -335,14 +335,7 @@ local function parseNovel(novelURL)
             return nat:text()
         end
     ))
-    --local novelTitle = document:selectFirst(".novel-info .novel-title"):text()
-    --local res = RequestDocument(POST("https://api.xgorn.pp.ua/scrape/readlightnovel", nil,
-    --    FormBodyBuilder()
-    --    :add("title", novelTitle):build()
-    --))
-    --local js = json.decode(res:toString():sub(33, -18))
-    --ni:setImageURL(js.cover)
-    ni:setImageURL(document:selectFirst(".cover img"):attr("src"))
+    ni:setImageURL(document:selectFirst(".cover img"):attr("data-src"))
     ni:setDescription(table.concat(
         map(
             document:select(".summary .content p"),

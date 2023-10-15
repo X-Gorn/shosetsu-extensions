@@ -63,7 +63,7 @@ return {
 		-- Remove/modify unwanted HTML elements to get a clean webpage.
 		htmlElement:select("br"):remove() -- Between each <p> is a <br>.
 
-		local elementString = tostring(chapter)
+		local elementString = tostring(htmlElement)
 		local res = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
 			FormBodyBuilder()
 			:add("lang", "Indonesian")

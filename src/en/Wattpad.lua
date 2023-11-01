@@ -83,7 +83,7 @@ local function getPassage(chapterURL)
     ))
     local raw_html = json.decode(res:toString():sub(33, -18))
     local translatedText = Document(raw_html.html_text)
-    return pageOfElem(translatedText, true)
+    return pageOfElem(translatedText)
 end
 
 --- @param data table
@@ -91,8 +91,8 @@ local function search(data)
     local queryContent = data[QUERY]
     local page = data[PAGE] - 1
     local query = baseURL ..
-    "/v4/search/stories?query=" ..
-    queryContent .. "&free=1&fields=stories(title,cover,url),nexturl&limit=20&mature=true&offset=" .. page * 20
+        "/v4/search/stories?query=" ..
+        queryContent .. "&free=1&fields=stories(title,cover,url),nexturl&limit=20&mature=true&offset=" .. page * 20
     local response = RequestDocument(GET(query, nil, nil))
     response = json.decode(response:text())
 
@@ -187,8 +187,8 @@ local function getListing(data)
         url = "https://api.wattpad.com/v5/hotlist?tags=" .. genreValue .. "&language=1&limit=20&offset=" .. page * 20
     else
         url =
-        "https://www.wattpad.com/v4/stories?fields=stories%28id%2Cuser%28name%2Cavatar%2Cfullname%29%2Ctitle%2Ccover%2Cdescription%2Cmature%2Ccompleted%2CvoteCount%2CreadCount%2Ccategories%2Curl%2CnumParts%2Crankings%2CfirstPartId%2Ctags%2CisPaywalled%29%2CnextUrl%2Ctotal&filter=new&language=1&mature=0&query=%23" ..
-        genreValue .. "&limit=20&offset=" .. page * 20
+            "https://www.wattpad.com/v4/stories?fields=stories%28id%2Cuser%28name%2Cavatar%2Cfullname%29%2Ctitle%2Ccover%2Cdescription%2Cmature%2Ccompleted%2CvoteCount%2CreadCount%2Ccategories%2Curl%2CnumParts%2Crankings%2CfirstPartId%2Ctags%2CisPaywalled%29%2CnextUrl%2Ctotal&filter=new&language=1&mature=0&query=%23" ..
+            genreValue .. "&limit=20&offset=" .. page * 20
     end
     return parseListing(url)
 end

@@ -75,7 +75,7 @@ local function getPassage(chapterURL)
     local pTagList = ""
     pTagList = map(htmlElement:select("p"), text)
     for k, v in pairs(pTagList) do ht = ht .. "<br><br>" .. v end
-    local elementString = ht
+    local elementString = tostring(Document(ht))
     local res = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
         FormBodyBuilder()
         :add("lang", "Indonesian")

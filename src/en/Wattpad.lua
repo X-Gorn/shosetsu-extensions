@@ -65,28 +65,8 @@ local function getPassage(chapterURL)
         :add("execute_script", "window.scrollTo(0, document.body.scrollHeight);"):build()
     ))
     local raw_res = json.decode(response:toString():sub(33, -18))
-    local htmlElement = Document(raw_res.html)
-    htmlElement = htmlElement:selectFirst(".row.part-content")
-    htmlElement:select("button"):remove()
-    htmlElement:select("br"):remove()
-    local toRemove = {}
-    htmlElement:traverse(NodeVisitor(function(v)
-        if v:tagName() == "p" and v:text() == "" then
-            toRemove[#toRemove + 1] = v
-        end
-    end, nil, true))
-    for _, v in pairs(toRemove) do
-        v:remove()
-    end
-    local elementString = tostring(htmlElement)
-    local res = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
-        FormBodyBuilder()
-        :add("lang", "Indonesian")
-        :add("html_text", elementString):build()
-    ))
-    local raw_html = json.decode(res:toString():sub(33, -18))
-    local translatedText = Document(raw_html.html_text)
-    return pageOfElem(translatedText)
+    local nerd = tostring(raw_res.error)
+    return nerd
 end
 
 --- @param data table

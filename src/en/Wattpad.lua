@@ -60,6 +60,7 @@ local function getPassage(chapterURL)
     local url = baseURL .. chapterURL
     local htmlElement = GETDocument(url)
     local htmlElement2 = GETDocument(url .. "/page/2")
+    local htmlElement3 = GETDocument(url .. "/page/3")
     htmlElement = htmlElement:selectFirst(".row.part-content .panel.panel-reading")
     htmlElement:select("button"):remove()
     htmlElement:select("br"):remove()
@@ -84,7 +85,19 @@ local function getPassage(chapterURL)
     for _, v in pairs(toRemove) do
         v:remove()
     end
-    local elementString = tostring(htmlElement) .. tostring(htmlElement2)
+    htmlElement3 = htmlElement3:selectFirst(".row.part-content .panel.panel-reading")
+    htmlElement3:select("button"):remove()
+    htmlElement3:select("br"):remove()
+    local toRemove = {}
+    htmlElement3:traverse(NodeVisitor(function(v)
+        if v:tagName() == "p" and v:text() == "" then
+            toRemove[#toRemove + 1] = v
+        end
+    end, nil, true))
+    for _, v in pairs(toRemove) do
+        v:remove()
+    end
+    local elementString = tostring(htmlElement) .. tostring(htmlElement2) .. tostring(htmlElement3)
     local res = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
         FormBodyBuilder()
         :add("lang", "Indonesian")

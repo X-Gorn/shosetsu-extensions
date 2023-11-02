@@ -58,10 +58,15 @@ local encode = Require("url").encode
 --- @return string @of chapter
 local function getPassage(chapterURL)
     local url = baseURL .. chapterURL
-    local htmlElement = GETDocument(url)
-    local htmlElement2 = GETDocument(url .. "/page/2")
-    local htmlElement3 = GETDocument(url .. "/page/3")
-    htmlElement = htmlElement:selectFirst(".row.part-content .panel.panel-reading")
+    local response = RequestDocument(POST("https://api.xgorn.pp.ua/scrape/get_page_source", nil,
+        FormBodyBuilder()
+        :add("url", url)
+        :add("implicitly_wait ", "3")
+        :add("execute_script", "window.scrollTo(0, document.body.scrollHeight);"):build()
+    ))
+    local raw_res = json.decode(response:toString():sub(33, -18))
+    htmlElement = Document(raw_res.html)
+    htmlElement = htmlElement:selectFirst(".row.part-content")
     htmlElement:select("button"):remove()
     htmlElement:select("br"):remove()
     local toRemove = {}
@@ -73,31 +78,7 @@ local function getPassage(chapterURL)
     for _, v in pairs(toRemove) do
         v:remove()
     end
-    htmlElement2 = htmlElement2:selectFirst(".row.part-content .panel.panel-reading")
-    htmlElement2:select("button"):remove()
-    htmlElement2:select("br"):remove()
-    local toRemove = {}
-    htmlElement2:traverse(NodeVisitor(function(v)
-        if v:tagName() == "p" and v:text() == "" then
-            toRemove[#toRemove + 1] = v
-        end
-    end, nil, true))
-    for _, v in pairs(toRemove) do
-        v:remove()
-    end
-    htmlElement3 = htmlElement3:selectFirst(".row.part-content .panel.panel-reading")
-    htmlElement3:select("button"):remove()
-    htmlElement3:select("br"):remove()
-    local toRemove = {}
-    htmlElement3:traverse(NodeVisitor(function(v)
-        if v:tagName() == "p" and v:text() == "" then
-            toRemove[#toRemove + 1] = v
-        end
-    end, nil, true))
-    for _, v in pairs(toRemove) do
-        v:remove()
-    end
-    local elementString = tostring(htmlElement) .. tostring(htmlElement2) .. tostring(htmlElement3)
+    local elementString = tostring(htmlElement)
     local res = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
         FormBodyBuilder()
         :add("lang", "Indonesian")

@@ -61,7 +61,7 @@ local function getPassage(chapterURL)
     local response = RequestDocument(POST("https://api.xgorn.pp.ua/scrape/get_page_source", nil,
         FormBodyBuilder()
         :add("url", url)
-        :add("implicitly_wait ", "3")
+        :add("implicitly_wait", "3")
         :add("execute_script", "window.scrollTo(0, document.body.scrollHeight);"):build()
     ))
     local raw_res = json.decode(response:toString():sub(33, -18))

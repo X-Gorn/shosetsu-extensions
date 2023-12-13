@@ -54,8 +54,8 @@ return {
 		Listing("Novels", false, function(data)
 			local sort = data[FILTER_SORT] and data[FILTER_SORT] + 1 or 1
 			local order = data[FILTER_ORDER]
-							and data[FILTER_ORDER] + 1
-							or default_order[sort]
+				and data[FILTER_ORDER] + 1
+				or default_order[sort]
 
 			return parse(GETDoc(qs({
 				sort = sort, order = order
@@ -72,7 +72,7 @@ return {
 	expandURL = expandURL,
 
 	parseNovel = function(url, loadChapters)
-		local doc = GETDoc(baseURL.."/series/"..url.."/a/")
+		local doc = GETDoc(baseURL .. "/series/" .. url .. "/a/")
 		local wrap = doc:selectFirst(".wi_fic_wrap")
 		local novel = wrap:selectFirst(".novel-container")
 		local r = wrap:selectFirst(".wi-fic_r-content")
@@ -102,7 +102,7 @@ return {
 		}
 
 		if loadChapters then
-			local body = RequestBody("action=wi_getreleases_pagination&pagenum=-1&mypostid="..url, MTYPE)
+			local body = RequestBody("action=wi_getreleases_pagination&pagenum=-1&mypostid=" .. url, MTYPE)
 			local cdoc = RequestDocument(POST("https://www.scribblehub.com/wp-admin/admin-ajax.php", HEADERS, body))
 			local chapters = AsList(map(cdoc:selectFirst("ol"):select("li"), function(v, i)
 				local a = v:selectFirst("a")
@@ -128,20 +128,26 @@ return {
 		local toRemove = {}
 		chap:traverse(NodeVisitor(function(v)
 			if v:tagName() == "p" and v:childrenSize() == 0 and v:text() == "" then
-				toRemove[#toRemove+1] = v
+				toRemove[#toRemove + 1] = v
 			end
 			if v:hasAttr("border") then
 				v:removeAttr("border")
 			end
 		end, nil, true))
-		for _,v in pairs(toRemove) do
+		for _, v in pairs(toRemove) do
 			v:remove()
 		end
 
-		-- Chapter title inserted before chapter text
-		chap:child(0):before("<h1>" .. title .. "</h1>");
-
-		return pageOfElem(chap, false, css)
+		local elementString = tostring(chap)
+		local res = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
+			FormBodyBuilder()
+			:add("lang", "Indonesian")
+			:add("html_text", elementString):build()
+		))
+		local raw_html = json.decode(res:toString():sub(33, -18))
+		local translatedText = Document(raw_html.html_text)
+		translatedText:child(0):before("<h1>" .. title .. "</h1>");
+		return pageOfElem(translatedText, false, css)
 	end,
 
 	search = function(data)

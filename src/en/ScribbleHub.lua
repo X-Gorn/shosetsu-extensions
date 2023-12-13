@@ -120,24 +120,9 @@ return {
 	end,
 
 	getPassage = function(url)
-		local chap = GETDoc(expandURL(url)):getElementById("main read chapter")
+		local chap = GETDoc(expandURL(url))
 		local title = chap:selectFirst(".chapter-title"):text()
 		chap = chap:getElementById("chp_raw")
-
-		-- Remove <p></p>.
-		--local toRemove = {}
-		--chap:traverse(NodeVisitor(function(v)
-		--	if v:tagName() == "p" and v:childrenSize() == 0 and v:text() == "" then
-		--		toRemove[#toRemove + 1] = v
-		--	end
-		--	if v:hasAttr("border") then
-		--		v:removeAttr("border")
-		--	end
-		--end, nil, true))
-		--for _, v in pairs(toRemove) do
-		--	v:remove()
-		--end
-
 		local elementString = tostring(chap)
 		local res = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
 			FormBodyBuilder()

@@ -3,6 +3,8 @@
 local baseURL = "https://www.scribblehub.com"
 local qs = Require("url").querystring
 
+local json = Require("dkjson")
+
 local css = Require("CommonCSS").table
 
 local function shrinkURL(url)

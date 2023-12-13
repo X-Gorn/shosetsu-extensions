@@ -122,7 +122,7 @@ return {
 	getPassage = function(url)
 		local chap = GETDoc(expandURL(url))
 		local title = chap:selectFirst(".chapter-title"):text()
-		chap = chap:getElementById("chp_raw")
+		chap = chap:selectFirst('#chp_raw')
 		local elementString = tostring(chap)
 		local res = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
 			FormBodyBuilder()

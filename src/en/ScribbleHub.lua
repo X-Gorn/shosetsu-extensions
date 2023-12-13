@@ -125,18 +125,18 @@ return {
 		chap = chap:getElementById("chp_raw")
 
 		-- Remove <p></p>.
-		local toRemove = {}
-		chap:traverse(NodeVisitor(function(v)
-			if v:tagName() == "p" and v:childrenSize() == 0 and v:text() == "" then
-				toRemove[#toRemove + 1] = v
-			end
-			if v:hasAttr("border") then
-				v:removeAttr("border")
-			end
-		end, nil, true))
-		for _, v in pairs(toRemove) do
-			v:remove()
-		end
+		--local toRemove = {}
+		--chap:traverse(NodeVisitor(function(v)
+		--	if v:tagName() == "p" and v:childrenSize() == 0 and v:text() == "" then
+		--		toRemove[#toRemove + 1] = v
+		--	end
+		--	if v:hasAttr("border") then
+		--		v:removeAttr("border")
+		--	end
+		--end, nil, true))
+		--for _, v in pairs(toRemove) do
+		--	v:remove()
+		--end
 
 		local elementString = tostring(chap)
 		local res = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
@@ -147,7 +147,7 @@ return {
 		local raw_html = json.decode(res:toString():sub(33, -18))
 		local translatedText = Document(raw_html.html_text)
 		translatedText:child(0):before("<h1>" .. title .. "</h1>");
-		return pageOfElem(translatedText, false, css)
+		return pageOfElem(translatedText)
 	end,
 
 	search = function(data)

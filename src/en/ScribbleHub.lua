@@ -1,11 +1,9 @@
--- {"id":86802,"ver":"1.0.2","libVer":"1.0.0","author":"TechnoJo4","dep":["url>=1.0.0","CommonCSS>=1.0.0"]}
+-- {"id":86802,"ver":"1.0.4","libVer":"1.0.0","author":"TechnoJo4","dep":["url>=1.0.0","CommonCSS>=1.0.0"]}
 
 local baseURL = "https://www.scribblehub.com"
 local qs = Require("url").querystring
 
 local json = Require("dkjson")
-
-local css = Require("CommonCSS").table
 
 local function shrinkURL(url)
 	return url:gsub("^.-scribblehub%.com/?", "")

@@ -3,13 +3,15 @@
 local baseURL = "https://www.mtlnovel.com"
 local settings = { [1] = 0 }
 
-local ORDER_BYS_INT = { [0] = "date",[1] = "name",[2] = "rating",[3] = "view" }
+local json = Require("dkjson")
+
+local ORDER_BYS_INT = { [0] = "date", [1] = "name", [2] = "rating", [3] = "view" }
 local ORDER_BYS_KEY = 102
 
-local ORDERS_INT = { [0] = "desc",[1] = "asc" }
+local ORDERS_INT = { [0] = "desc", [1] = "asc" }
 local ORDERS_KEY = 103
 
-local STATUES_INT = { [0] = "all",[1] = "completed",[2] = "ongoing" }
+local STATUES_INT = { [0] = "all", [1] = "completed", [2] = "ongoing" }
 local STATUSES_KEY = 104
 
 local function shrinkURL(url)
@@ -46,16 +48,18 @@ local function search(data)
 		query = ""
 	end
 	local m = MediaType("multipart/form-data; boundary=----aWhhdGVrb3RsaW4K")
-	local body = RequestBody("------aWhhdGVrb3RsaW4K\r\nContent-Disposition: form-data; name=\"s\"\r\n\r\n" .. data[QUERY] .. "\r\n------aWhhdGVrb3RsaW4K--\r\n", m)
+	local body = RequestBody(
+	"------aWhhdGVrb3RsaW4K\r\nContent-Disposition: form-data; name=\"s\"\r\n\r\n" ..
+	data[QUERY] .. "\r\n------aWhhdGVrb3RsaW4K--\r\n", m)
 	local doc = RequestDocument(POST(baseURL, nil, body))
 	return map(doc:select("div.search-results > div.box"),
-			function(v)
-				return Novel {
-					link = v:selectFirst("a"):attr("href"):match(baseURL .. "/(.+)/"),
-					title = v:selectFirst(".list-title"):text(),
-					imageURL = v:selectFirst(".list-img"):attr("src")
-				}
-			end)
+		function(v)
+			return Novel {
+				link = v:selectFirst("a"):attr("href"):match(baseURL .. "/(.+)/"),
+				title = v:selectFirst(".list-title"):text(),
+				imageURL = v:selectFirst(".list-img"):attr("src")
+			}
+		end)
 end
 
 --- @param novelURL string @URL of novel
@@ -71,7 +75,7 @@ local function parseNovel(novelURL)
 	local details = document:selectFirst("table.info"):select("tr")
 	local details2 = document:select("table.info"):get(1):select("tr")
 
-	n:setAlternativeTitles({ getDetail(details:get(0)),getDetail(details:get(1)) })
+	n:setAlternativeTitles({ getDetail(details:get(0)), getDetail(details:get(1)) })
 
 	local sta = getDetailE(details:get(2)):selectFirst("a"):text()
 	n:setStatus(NovelStatus(sta == "Completed" and 1 or sta == "Ongoing" and 0 or 3))
@@ -106,13 +110,20 @@ local function getPassage(chapterURL)
 	local htmlElement = GETDocument(baseURL .. "/" .. chapterURL):selectFirst("article.post")
 	local title = htmlElement:selectFirst("span.current-crumb"):text()
 	htmlElement = htmlElement:selectFirst("div.par")
-	-- Chapter title inserted before chapter text
-	htmlElement:child(0):before("<h1>" .. title .. "</h1>");
 
 	-- Remove/modify unwanted HTML elements to get a clean webpage.
 	htmlElement:select("div.ads"):remove()
 
-	return pageOfElem(htmlElement, true)
+	local elementString = tostring(htmlElement)
+	local res = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
+		FormBodyBuilder()
+		:add("lang", "Indonesian")
+		:add("html_text", elementString):build()
+	))
+	local raw_html = json.decode(res:toString():sub(33, -18))
+	local translatedText = Document(raw_html.html_text)
+	translatedText:child(0):before("<h1>" .. title .. "</h1>");
+	return pageOfElem(translatedText)
 end
 
 return {
@@ -129,10 +140,10 @@ return {
 	listings = {
 		Listing("Novel List", true, function(data)
 			local d = GETDocument(baseURL .. "/novel-list/" ..
-					"?orderby=" .. ORDER_BYS_INT[data[ORDER_BYS_KEY]] ..
-					"&order=" .. ORDERS_INT[data[ORDERS_KEY]] ..
-					"&status=" .. STATUES_INT[data[STATUSES_KEY]] ..
-					"&pg=" .. data[PAGE])
+				"?orderby=" .. ORDER_BYS_INT[data[ORDER_BYS_KEY]] ..
+				"&order=" .. ORDERS_INT[data[ORDERS_KEY]] ..
+				"&status=" .. STATUES_INT[data[STATUSES_KEY]] ..
+				"&pg=" .. data[PAGE])
 			return map(d:select("div.box.wide"), function(v)
 				local lis = Novel()
 				lis:setImageURL(v:selectFirst("amp-img.list-img"):selectFirst("amp-img.list-img"):attr("src"))
@@ -146,12 +157,12 @@ return {
 	getPassage = getPassage,
 	parseNovel = parseNovel,
 	--settings = {
-		--  DropdownFilter(1, "Language", { "English", "Chinese" })
+	--  DropdownFilter(1, "Language", { "English", "Chinese" })
 	--},
 	searchFilters = {
-		DropdownFilter(ORDER_BYS_KEY, "Order by", { "Date","Name","Rating","Views" }),
-		DropdownFilter(ORDERS_KEY, "Order", { "Descending","Ascending" }),
-		DropdownFilter(STATUSES_KEY, "Status", { "All","Completed","Ongoing" })
+		DropdownFilter(ORDER_BYS_KEY, "Order by", { "Date", "Name", "Rating", "Views" }),
+		DropdownFilter(ORDERS_KEY, "Order", { "Descending", "Ascending" }),
+		DropdownFilter(STATUSES_KEY, "Status", { "All", "Completed", "Ongoing" })
 	},
 	--updateSetting = function(id, value)
 	--	settings[id] = value

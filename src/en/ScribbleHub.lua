@@ -112,7 +112,6 @@ return {
 					link = shrinkURL(a:attr("href"))
 				}
 			end))
-			table.sort(chapters, function(a, b) return a > b end)
 			info:setChapters(chapters)
 		end
 

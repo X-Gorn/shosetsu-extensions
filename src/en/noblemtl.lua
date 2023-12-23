@@ -71,7 +71,7 @@ return {
         local chapter = document:selectFirst("div.epcontent")
 
         local elementString = tostring(chapter)
-        local res = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
+        local res = RequestDocument(POST("https://api.xgorn.me/translate/html", nil,
             FormBodyBuilder()
             :add("lang", "Indonesian")
             :add("html_text", elementString):build()

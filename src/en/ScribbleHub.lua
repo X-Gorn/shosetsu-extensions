@@ -125,7 +125,7 @@ return {
 		local title = chap:selectFirst(".chapter-title"):text()
 		chap = chap:selectFirst('#chp_raw')
 		local elementString = tostring(chap)
-		local res = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
+		local res = RequestDocument(POST("https://api.xgorn.me/translate/html", nil,
 			FormBodyBuilder()
 			:add("lang", "Indonesian")
 			:add("html_text", elementString):build()

@@ -64,7 +64,7 @@ return {
 		htmlElement:select("br"):remove() -- Between each <p> is a <br>.
 
 		local elementString = tostring(htmlElement)
-		local res = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
+		local res = RequestDocument(POST("https://api.xgorn.me/translate/html", nil,
 			FormBodyBuilder()
 			:add("lang", "Indonesian")
 			:add("html_text", elementString):build()

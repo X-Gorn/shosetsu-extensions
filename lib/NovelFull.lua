@@ -52,9 +52,9 @@ function defaults:getPassage(url)
 	local stringElement = tostring(htmlElement)
 
 	-- Translate text
-	local translatedText = RequestDocument(POST("https://api.xgorn.pp.ua/translator", nil,
+	local translatedText = RequestDocument(POST("https://api.xgorn.me/translator", nil,
 		RequestBody(qs({ text = stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst(
-	"div.text")
+		"div.text")
 
 	-- Chapter title inserted before chapter text.
 	translatedText:child(0):before("<h1>" .. title .. "</h1>");
@@ -91,7 +91,7 @@ function defaults:parseNovel(url, loadChapters)
 		local i = 0
 		info:setChapters(AsList(map(
 			GETDocument(qs({ novelId = id, currentChapterId = "" }, self.ajax_base .. self.ajax_chapters)):selectFirst(
-			"select"):children(),
+				"select"):children(),
 			function(v)
 				local chap = NovelChapter()
 				chap:setLink(self.shrinkURL(v:attr("value")))

@@ -84,7 +84,7 @@ local function getPassage(chapterURL)
         end
         elementString = elementString .. tostring(htmlElement)
     end
-    local res = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
+    local res = RequestDocument(POST("https://api.xgorn.me/translate/html", nil,
         FormBodyBuilder()
         :add("lang", "Indonesian")
         :add("html_text", elementString):build()

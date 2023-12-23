@@ -49,8 +49,8 @@ local function search(data)
 	end
 	local m = MediaType("multipart/form-data; boundary=----aWhhdGVrb3RsaW4K")
 	local body = RequestBody(
-	"------aWhhdGVrb3RsaW4K\r\nContent-Disposition: form-data; name=\"s\"\r\n\r\n" ..
-	data[QUERY] .. "\r\n------aWhhdGVrb3RsaW4K--\r\n", m)
+		"------aWhhdGVrb3RsaW4K\r\nContent-Disposition: form-data; name=\"s\"\r\n\r\n" ..
+		data[QUERY] .. "\r\n------aWhhdGVrb3RsaW4K--\r\n", m)
 	local doc = RequestDocument(POST(baseURL, nil, body))
 	return map(doc:select("div.search-results > div.box"),
 		function(v)
@@ -115,7 +115,7 @@ local function getPassage(chapterURL)
 	htmlElement:select("div.ads"):remove()
 
 	local elementString = tostring(htmlElement)
-	local res = RequestDocument(POST("https://api.xgorn.pp.ua/translate/html", nil,
+	local res = RequestDocument(POST("https://api.xgorn.me/translate/html", nil,
 		FormBodyBuilder()
 		:add("lang", "Indonesian")
 		:add("html_text", elementString):build()

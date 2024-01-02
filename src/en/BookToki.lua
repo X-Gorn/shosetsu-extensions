@@ -39,7 +39,7 @@ return {
         end), "\n"))
 
         if loadChapters then
-            local listOfChapters = document:select("div.list-body li.list-item")
+            local listOfChapters = document:select(".list-body li.list-item")
             local count = listOfChapters:size()
             local chapterList = AsList(map(listOfChapters, function(v)
                 local c = NovelChapter()

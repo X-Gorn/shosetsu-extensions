@@ -2,6 +2,7 @@
 
 local encode = Require("url").encode
 local qs = Require("url").querystring
+local json = Require("dkjson")
 local text = function(v)
 	return v:text()
 end

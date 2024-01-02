@@ -669,6 +669,16 @@
       "ver": "1.0.3",
       "libVer": "1.0.0",
       "md5": ""
+    },
+    {
+      "name": "BookToki",
+      "fileName": "BookToki",
+      "imageURL": "https://booktoki319.com/img/book/favicon-32x32.png",
+      "id": 14054904,
+      "lang": "en",
+      "ver": "1.0.0",
+      "libVer": "1.0.0",
+      "md5": ""
     }
   ]
 }

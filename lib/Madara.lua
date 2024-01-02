@@ -135,17 +135,15 @@ function defaults:getPassage(url)
 	htmlElement:select("div.lnbad-tag"):remove()                                -- LightNovelBastion text size
 	htmlElement:select("i.icon.j_open_para_comment.j_para_comment_count"):remove() -- BoxNovel, VipNovel numbers
 
-	-- Convert element to string
-	local stringElement = tostring(htmlElement)
-
-	-- Translate text
-	local translatedText = RequestDocument(POST("https://api.xgorn.me/translator", nil,
-		RequestBody(qs({ text = stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst(
-		"div.text")
-
-	-- Insert title
-	translatedText:prepend("<h1>" .. title .. "</h1>");
-
+	local elementString = tostring(htmlElement)
+	local res = RequestDocument(POST("https://api.xgorn.me/translate/html", nil,
+		FormBodyBuilder()
+		:add("lang", "Indonesian")
+		:add("html_text", elementString):build()
+	))
+	local raw_html = json.decode(res:toString():sub(33, -18))
+	local translatedText = Document(raw_html.html_text)
+	translatedText:child(0):before("<h1>" .. title .. "</h1>");
 	return pageOfElem(translatedText, true, self.customStyle)
 end
 

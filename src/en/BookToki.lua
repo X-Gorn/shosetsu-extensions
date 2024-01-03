@@ -32,19 +32,22 @@ return {
     parseNovel = function(novelURL, loadChapters)
         local document = GETDocument(expandURL(novelURL)):selectFirst(".content")
         local novelInfo = NovelInfo()
-        novelInfo:setTitle(document:select("div.view-content:nth-child(1)"):text())
-        novelInfo:setImageURL(document:select("div.view-content1 img"):attr("src"))
-        novelInfo:setDescription(table.concat(map(document:select("div.view-content:nth-child(3)"), function(v)
-            return v:text()
-        end), "\n"))
+        novelInfo:setTitle(document:select(".view-content .view-content:nth-child(1)"):text())
+        novelInfo:setImageURL(document:select(".view-content .view-content1 img"):attr("src"))
+        novelInfo:setDescription(table.concat(
+            map(document:select(".view-content .view-content:nth-child(3)"), function(v)
+                return v:text()
+            end), "\n"))
 
         if loadChapters then
             local listOfChapters = document:select(".list-body li.list-item")
             local count = listOfChapters:size()
             local chapterList = AsList(map(listOfChapters, function(v)
                 local c = NovelChapter()
-                c:setLink(shrinkURL(v:select("div.wr-subject a.item-subject"):attr("href")))
-                c:setTitle(v:select("div.wr-subject a.item-subject"):text())
+                c:setLink(shrinkURL(v:select(".wr-subject a.item-subject"):attr("href")))
+                local title = v:select("div.wr-subject a.item-subject")
+                title:select("span"):remove()
+                c:setTitle(title:text())
                 c:setOrder(count)
                 count = count - 1
                 return c

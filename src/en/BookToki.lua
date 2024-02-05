@@ -43,8 +43,10 @@ return {
             local count = listOfChapters:size()
             local chapterList = AsList(map(listOfChapters, function(v)
                 local c = NovelChapter()
+                local title = v:select("div.wr-subject a.item-subject")
+                title:select("span"):remove()
                 c:setLink(shrinkURL(v:select("div.wr-subject a.item-subject"):attr("href")))
-                c:setTitle(v:select("div.wr-subject a.item-subject"):text())
+                c:setTitle(title:text())
                 c:setOrder(count)
                 count = count - 1
                 return c

@@ -32,7 +32,7 @@ return {
     parseNovel = function(novelURL, loadChapters)
         local document = GETDocument(expandURL(novelURL)):selectFirst(".content")
         local novelInfo = NovelInfo()
-        novelInfo:setTitle(document:select("div.view-content:nth-child(1)"):text())
+        novelInfo:setTitle(document:select(".col-sm-8 > div:nth-child(1)"):text())
         novelInfo:setImageURL(document:select("div.view-content1 img"):attr("src"))
         novelInfo:setDescription(table.concat(map(document:select("div.view-content:nth-child(3)"), function(v)
             return v:text()

@@ -62,10 +62,11 @@ return {
             :add("url", expandURL(chapterURL))
             :add("selector", "article div#novel_content"):build()
         ))
+        local raw_html_ = json.decode(doc:toString():sub(33, -18))
         local res = RequestDocument(POST("https://api.xgorn.me/translate/html", nil,
             FormBodyBuilder()
             :add("lang", "Indonesian")
-            :add("html_text", doc:toString()):build()
+            :add("html_text", raw_html_.html):build()
         ))
         local raw_html = json.decode(res:toString():sub(33, -18))
         local translatedText = Document(raw_html.html_text)

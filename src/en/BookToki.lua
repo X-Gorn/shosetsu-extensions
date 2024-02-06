@@ -59,7 +59,7 @@ return {
     getPassage = function(chapterURL)
         local doc = RequestDocument(POST("https://api.xgorn.me/scrape/cffi_request", nil,
             FormBodyBuilder()
-            :add("url", chapterURL)
+            :add("url", expandURL(chapterURL))
             :add("selector", "article div#novel_content"):build()
         ))
         local js = json.decode(doc:toString():sub(33, -18))

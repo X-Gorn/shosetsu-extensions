@@ -1,5 +1,5 @@
 -- {"id":92834729,"ver":"1.0.0","libVer":"1.0.0","author":"pxkazuki"}
-local baseURL = "https://booktoki319.com"
+local baseURL = "https://booktoki324.com"
 
 local json = Require("dkjson")
 
@@ -15,7 +15,7 @@ return {
     id = 14054904,
     name = "BookToki",
     baseURL = baseURL,
-    imageURL = "https://booktoki319.com/img/book/favicon-32x32.png",
+    imageURL = "https://booktoki324.com/img/book/favicon-32x32.png",
     hasSearch = true,
     listings = {
         Listing("Latest", true, function(data)

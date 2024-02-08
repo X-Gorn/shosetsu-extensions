@@ -57,14 +57,17 @@ return {
         return novelInfo
     end,
     getPassage = function(chapterURL)
-        local document = GETDocument(expandURL(chapterURL))
-        local chapter = document:selectFirst("article div#novel_content")
-
-        local elementString = tostring(chapter)
+        local doc = RequestDocument(POST("https://api.xgorn.me/scrape/cffi_request", nil,
+            FormBodyBuilder()
+            :add("url", expandURL(chapterURL))
+            :add("selector", "article div#novel_content"):build()
+        ))
+        local raw_html_ = json.decode(doc:toString():sub(33, -18))
         local res = RequestDocument(POST("https://api.xgorn.me/translate/html", nil,
             FormBodyBuilder()
             :add("lang", "Indonesian")
-            :add("html_text", elementString):build()
+            :add("tags", "p")
+            :add("html_text", raw_html_.html:gsub('\"', '"')):build()
         ))
         local raw_html = json.decode(res:toString():sub(33, -18))
         local translatedText = Document(raw_html.html_text)

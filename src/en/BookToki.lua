@@ -65,7 +65,7 @@ return {
             FormBodyBuilder()
             :add("lang", "Indonesian")
             :add("tags", "p")
-            :add("html_text", raw_html_.html):build()
+            :add("html_text", elementString):build()
         ))
         local raw_html = json.decode(res:toString():sub(33, -18))
         local translatedText = Document(raw_html.html_text)

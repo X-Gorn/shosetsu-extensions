@@ -128,6 +128,7 @@ return {
 		local res = RequestDocument(POST("https://api.xgorn.me/translate/html", nil,
 			FormBodyBuilder()
 			:add("lang", "Indonesian")
+			:add("tags", "p h1 h2 h3 h4 h5 h6 h7 h8 h9 div")
 			:add("html_text", elementString):build()
 		))
 		local raw_html = json.decode(res:toString():sub(33, -18))

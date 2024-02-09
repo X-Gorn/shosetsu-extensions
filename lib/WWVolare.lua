@@ -67,15 +67,16 @@ return function(id, name, base, contentSel, image)
 				elem:removeAttr("border")
 			end)
 
-			-- Convert element to string
-			local stringElement = tostring(content)
-
-			-- Translate text
-			local translatedText = RequestDocument(POST("https://api.xgorn.me/translator", nil,
-				RequestBody(qs({ text = stringElement }), MediaType("application/x-www-form-urlencoded")))):selectFirst(
-				"div.text")
-
-			return pageOfElem(translatedText, true, css)
+			local elementString = tostring(content)
+			local res = RequestDocument(POST("https://api.xgorn.me/translate/html", nil,
+				FormBodyBuilder()
+				:add("lang", "Indonesian")
+				:add("tags", "p")
+				:add("html_text", elementString):build()
+			))
+			local raw_html = json.decode(res:toString():sub(33, -18))
+			local translatedText = Document(raw_html.html_text)
+			return pageOfElem(translatedText)
 		end,
 
 		parseNovel = function(slug, loadChapters)

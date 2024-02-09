@@ -308,6 +308,7 @@ local function getPassage(chapterURL)
     local res = RequestDocument(POST("https://api.xgorn.me/translate/html", nil,
         FormBodyBuilder()
         :add("lang", "Indonesian")
+        :add("tags", "p")
         :add("html_text", elementString):build()
     ))
     local raw_html = json.decode(res:toString():sub(33, -18))

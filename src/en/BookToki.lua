@@ -1,5 +1,5 @@
 -- {"id":92834729,"ver":"1.0.0","libVer":"1.0.0","author":"pxkazuki"}
-local baseURL = "https://booktoki324.com"
+local baseURL = "https://booktoki.com"
 
 local json = Require("dkjson")
 

@@ -96,7 +96,7 @@ local function getPassage(chapterURL)
     local raw_html = json.decode(res:toString():sub(33, -18))
     local translatedText = Document(raw_html.html_text)
     translatedText:child(0):before("<h1>" .. title .. "</h1>");
-    return pageOfElem(ht)
+    return pageOfElem(translatedText)
 end
 
 --- @param data table
@@ -245,7 +245,7 @@ end
 
 return {
     id = 95556,
-    name = "Wattpad",
+    name = "Wattpad [ID]",
     baseURL = baseURL,
     imageURL = "https://cdn-icons-png.flaticon.com/512/2111/2111715.png",
     hasSearch = true,

@@ -1,4 +1,4 @@
--- {"id":95556,"ver":"1.0.5","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":95556,"ver":"1.0.7","libVer":"1.0.0","author":"Confident-hate"}
 local json = Require("dkjson")
 local baseURL = "https://www.wattpad.com"
 
@@ -66,9 +66,8 @@ local function getPassage(chapterURL)
     local htmlElement = GETDocument(url)
     local title = htmlElement:selectFirst("header h1"):text()
     local chapterPages = string.match(htmlElement:html(), ".*pages.:([0-9]*).*")
-    local ht = "<h1>" .. title .. "</h1>"
+    local elementString = ""
     for i = 1, chapterPages, 1 do
-        local pTagList = ""
         htmlElement = GETDocument(url .. "/page/" .. i)
         htmlElement = htmlElement:selectFirst(".row.part-content .panel.panel-reading")
         htmlElement:select("button"):remove()
@@ -82,16 +81,13 @@ local function getPassage(chapterURL)
         for _, v in pairs(toRemove) do
             v:remove()
         end
-        pTagList = map(htmlElement:select("p"), text)
-        ht = ht .. "-----------------"
-        for k, v in pairs(pTagList) do ht = ht .. "<br><br>" .. v end
-        ht = ht .. "<br><br>-----------------"
+        elementString = elementString .. tostring(htmlElement)
     end
     local res = RequestDocument(POST("https://api.xgorn.me/translate/html", nil,
         FormBodyBuilder()
         :add("lang", "Indonesian")
         :add("tags", "p")
-        :add("html_text", ht):build()
+        :add("html_text", elementString):build()
     ))
     local raw_html = json.decode(res:toString():sub(33, -18))
     local translatedText = Document(raw_html.html_text)

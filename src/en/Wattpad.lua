@@ -1,4 +1,4 @@
--- {"id":95556,"ver":"1.0.3","libVer":"1.0.0","author":"Confident-hate"}
+-- {"id":95556,"ver":"1.0.5","libVer":"1.0.0","author":"Confident-hate"}
 local json = Require("dkjson")
 local baseURL = "https://www.wattpad.com"
 
@@ -66,7 +66,7 @@ local function getPassage(chapterURL)
     local htmlElement = GETDocument(url)
     local title = htmlElement:selectFirst("header h1"):text()
     local chapterPages = string.match(htmlElement:html(), ".*pages.:([0-9]*).*")
-    local elementString = ""
+    local ht = "<h1>" .. title .. "</h1>"
     for i = 1, chapterPages, 1 do
         local pTagList = ""
         htmlElement = GETDocument(url .. "/page/" .. i)
@@ -82,18 +82,21 @@ local function getPassage(chapterURL)
         for _, v in pairs(toRemove) do
             v:remove()
         end
-        elementString = elementString .. tostring(htmlElement)
+        pTagList = map(htmlElement:select("p"), text)
+        ht = ht .. "-----------------"
+        for k, v in pairs(pTagList) do ht = ht .. "<br><br>" .. v end
+        ht = ht .. "<br><br>-----------------"
     end
     local res = RequestDocument(POST("https://api.xgorn.me/translate/html", nil,
         FormBodyBuilder()
         :add("lang", "Indonesian")
         :add("tags", "p")
-        :add("html_text", elementString):build()
+        :add("html_text", ht):build()
     ))
     local raw_html = json.decode(res:toString():sub(33, -18))
     local translatedText = Document(raw_html.html_text)
     translatedText:child(0):before("<h1>" .. title .. "</h1>");
-    return pageOfElem(translatedText)
+    return pageOfElem(ht)
 end
 
 --- @param data table
@@ -162,16 +165,22 @@ local function parseNovel(novelURL)
         description = document:selectFirst(".description-text"):text()
     end
 
-    return NovelInfo {
+    local status = NovelStatus.UNKNOWN
+    for _, v in ipairs(mapNotNil(document:select(".story-badges"), function(v) return v end)) do
+        if v:selectFirst(".icon.completed"):text() == "Complete" then
+            status = NovelStatus.COMPLETED
+        elseif v:selectFirst(".icon.completed"):text() == "Ongoing" then
+            status = NovelStatus.PUBLISHING
+        end
+    end
+
+    local novel = NovelInfo {
         title = document:selectFirst(".story-info .sr-only"):text(),
         description = description,
         imageURL = document:select(".story-cover img"):attr("src"),
-        status = ({
-            Ongoing = NovelStatus.PUBLISHING,
-            Complete = NovelStatus.COMPLETED,
-        })[document:selectFirst(".story-badges .tag-item"):text()],
         authors = { document:selectFirst(".author-info__username"):text() },
         genres = map(document:select(".tag-items li a"), text),
+        status = status,
         chapters = AsList(
             map(document:select(".table-of-contents.hidden-xxs ul li"), function(v)
                 local title = v:selectFirst("a .left-container"):text()
@@ -187,6 +196,7 @@ local function parseNovel(novelURL)
             end)
         )
     }
+    return novel
 end
 
 local function parseListing(listingURL)

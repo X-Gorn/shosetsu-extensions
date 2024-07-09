@@ -135,18 +135,8 @@ function defaults:getPassage(url)
 	-- Remove/modify unwanted HTML elements to get a clean webpage.
 	htmlElement:select("div.lnbad-tag"):remove()                                -- LightNovelBastion text size
 	htmlElement:select("i.icon.j_open_para_comment.j_para_comment_count"):remove() -- BoxNovel, VipNovel numbers
-
-	local elementString = tostring(htmlElement)
-	local res = RequestDocument(POST("https://api.xgorn.me/translate/html", nil,
-		FormBodyBuilder()
-		:add("lang", "Indonesian")
-		:add("tags", "p")
-		:add("html_text", elementString):build()
-	))
-	local raw_html = json.decode(res:toString():sub(33, -18))
-	local translatedText = Document(raw_html.html_text)
-	translatedText:child(0):before("<h1>" .. title .. "</h1>");
-	return pageOfElem(translatedText, true, self.customStyle)
+	htmlElement:child(0):before("<h1>" .. title .. "</h1>");
+	return pageOfElem(htmlElement, true, self.customStyle)
 end
 
 ---@param image_element Element An img element of which the biggest image shall be selected.
